@@ -1,6 +1,7 @@
 import { AdminEndpoint } from "./endpoints/admin";
 import { ApplicationEndpoint } from "./endpoints/applicaton";
 import { GroupsEndpoint } from "./endpoints/groups";
+import { HooksEndpoint } from "./endpoints/hooks";
 import { ProjectsEndpoint } from "./endpoints/projects";
 import { Basic, BasicAuth } from "./types";
 export * from "./types";
@@ -59,6 +60,11 @@ export class StashConnector {
     groups: GroupsEndpoint;
 
     /**
+    * Contains all operations from '/rest/api/1.0/hooks/.
+    */
+    hooks: HooksEndpoint;
+
+    /**
      * Instance new Stash Connector with user credentials and stash host.
      * @param {BasicAuth} auth Basic Authorization info and stash host 
      */
@@ -68,6 +74,7 @@ export class StashConnector {
         this.admin = new AdminEndpoint(this.auth);
         this.applicationProperties = new ApplicationEndpoint(this.auth);
         this.groups = new GroupsEndpoint(this.auth);
+        this.hooks = new HooksEndpoint(this.auth);
     }
 }
 
