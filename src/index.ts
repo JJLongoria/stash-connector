@@ -3,6 +3,7 @@ import { ApplicationEndpoint } from "./endpoints/applicaton";
 import { GroupsEndpoint } from "./endpoints/groups";
 import { HooksEndpoint } from "./endpoints/hooks";
 import { LogsEndpoint } from "./endpoints/logs";
+import { MarkupEndpoint } from "./endpoints/markup";
 import { ProjectsEndpoint } from "./endpoints/projects";
 import { Basic, BasicAuth } from "./types";
 export * from "./types";
@@ -68,7 +69,12 @@ export class StashConnector {
     /**
     * Contains all operations from '/rest/api/1.0/logs/.
     */
-     logs: LogsEndpoint;
+    logs: LogsEndpoint;
+
+    /**
+     * Contains all operations from '/rest/api/1.0/markup/.
+     */
+    markup: MarkupEndpoint;
 
     /**
      * Instance new Stash Connector with user credentials and stash host.
@@ -82,6 +88,7 @@ export class StashConnector {
         this.groups = new GroupsEndpoint(this.auth);
         this.hooks = new HooksEndpoint(this.auth);
         this.logs = new LogsEndpoint(this.auth);
+        this.markup = new MarkupEndpoint(this.auth);
     }
 }
 

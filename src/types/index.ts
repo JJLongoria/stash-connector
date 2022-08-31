@@ -743,6 +743,16 @@ export interface LoggerOutput {
     logLevel: 'TRACE' | 'DEBUG' | 'INFO' | 'WARN ' | 'ERROR';
 }
 
+export interface MarkupPreviewOptions {
+    urlMode: string;
+    hardwrap: boolean;
+    htmlEscape: boolean;
+}
+
+export interface MarkupPreviewOutput {
+    html: string;
+}
+
 export interface Link {
     url: string;
     rel: string;
