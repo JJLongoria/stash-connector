@@ -379,6 +379,16 @@ export class AdminLicenseEndpoint extends EndpointService {
  */
 export class AdminMailServerEndpoint extends EndpointService {
 
+    /**
+     * Contains all operations related with mail server sender address administration
+     * All paths and operations from '/rest/api/1.0/admin/mail-server/sender-address'. 
+     * @returns {AdminMailServerSenderAddressEndpoint} Get all operations about mail server sender address administration
+     */
+    senderAddress = () => {
+        return new AdminMailServerSenderAddressEndpoint(this.auth);
+    };
+
+
     constructor(auth: Basic) {
         super(auth, '/mail-server');
     }
@@ -414,6 +424,59 @@ export class AdminMailServerEndpoint extends EndpointService {
 
     /**
      * Deletes the current mail configuration
+     * @returns {Promise<void>} If not throw errors, operation finish succesfully
+     */
+    async delete(): Promise<void> {
+        const request = this.doDelete();
+        try {
+            const result = await request.execute();
+            return;
+        } catch (error) {
+            throw error;
+        }
+    }
+}
+
+/**
+ * Class to manage and expose all endpoits and operations below '/rest/api/1.0/projects/admin/mail-server/sender-address'
+ */
+export class AdminMailServerSenderAddressEndpoint extends EndpointService {
+
+    constructor(auth: Basic) {
+        super(auth, '/sender-address');
+    }
+
+    /**
+     * Retrieves the server email address 
+     * @returns {Promise<string>} Promise with the mail host configuration data
+     */
+    async get(): Promise<string> {
+        const request = this.doGet();
+        try {
+            const result = await request.execute();
+            return result.data;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    /**
+     * Updates the server email address 
+     * @param {string} serverEmail Mail server data to update
+     * @returns {Promise<string>} Promise with the updated mail host configuration data
+     */
+    async update(serverEmail: string): Promise<string> {
+        const request = this.doPut().asJson().withBody(serverEmail);
+        try {
+            const result = await request.execute();
+            return result.data;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    /**
+     * Clears the server email address
      * @returns {Promise<void>} If not throw errors, operation finish succesfully
      */
     async delete(): Promise<void> {
