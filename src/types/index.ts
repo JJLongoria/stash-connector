@@ -732,6 +732,13 @@ export interface FilePath {
     toString: string;
 }
 
+export interface ApplicationProperties {
+    version: string;
+    buildNumber: number;
+    buildDate: number;
+    displayName: string;
+}
+
 export interface Link {
     url: string;
     rel: string;
