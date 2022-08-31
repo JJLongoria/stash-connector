@@ -14,9 +14,7 @@ export class GroupsEndpoint extends EndpointService {
      * @returns {Promise<Page<string>>} Promise with the application properties data
      */
     async list(): Promise<Page<string>> {
-        const request = this.doGet({
-            param: 'cluster'
-        });
+        const request = this.doGet();
         try {
             const result = await request.execute();
             return result.data as Page<string>;

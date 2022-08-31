@@ -655,6 +655,12 @@ export interface ChangePasswordInput {
     name: string;
 }
 
+export interface ChangeUserPasswordInput {
+    password: string;
+    passwordConfirm: string;
+    oldPassword: string;
+}
+
 export interface GroupMembersOptions {
     context?: string;
     filter?: string;
@@ -765,6 +771,10 @@ export interface ReposOptions {
     permission?: 'REPO_READ' | 'REPO_WRITE ' | 'REPO_ADMIN';
     visibility?: 'public' | 'private';
     pageOptions?: PageOptions;
+}
+
+export interface DeleteAvatarOutput {
+    href: string;
 }
 
 export interface Link {
