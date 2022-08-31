@@ -739,6 +739,10 @@ export interface ApplicationProperties {
     displayName: string;
 }
 
+export interface LoggerOutput {
+    logLevel: 'TRACE' | 'DEBUG' | 'INFO' | 'WARN ' | 'ERROR';
+}
+
 export interface Link {
     url: string;
     rel: string;

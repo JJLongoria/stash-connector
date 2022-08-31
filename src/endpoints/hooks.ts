@@ -5,6 +5,11 @@ import { Basic, EndpointService } from "../types";
  */
 export class HooksEndpoint extends EndpointService {
 
+    /**
+     * Contains all operations related with hooks avatar
+     * All paths and operations from '/rest/api/1.0/hooks/{hookKey}/avatar'. 
+     * @returns {HookAvatarEndpoint} Get all operations about hooks avatar
+     */
     avatar = (hookKey: string) => {
         return new HookAvatarEndpoint(this.auth, hookKey);
     };
@@ -30,7 +35,7 @@ export class HookAvatarEndpoint extends EndpointService {
      */
     async get(version?: number): Promise<any> {
         const request = this.doGet();
-        console.log(request);
+        
         try {
             if (version !== undefined) {
                 request.addQueryParam('version', version);

@@ -2339,7 +2339,7 @@ export class ProjectAvatarEndpoint extends EndpointService {
      */
     async get(size?: number): Promise<any> {
         const request = this.doGet();
-        console.log(request);
+        
         try {
             if (size) {
                 request.addQueryParam('s', size);
