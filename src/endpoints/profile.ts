@@ -1,9 +1,28 @@
 import { Basic, EndpointService, Page, PageOptions, RepoOutput } from "../types";
 
 /**
+ * Class to manage and expose all endpoits and operations below '/rest/api/1.0/profile/'
+ */
+export class ProfileEndpoint extends EndpointService {
+
+    /**
+     * Contains all operations related with recent records
+     * All paths and operations from '/rest/api/1.0/profile/recent'. 
+     * @returns {ProfileRecentEndpoint} Get all operations about recent records
+     */
+     recent = () => {
+        return new ProfileRecentEndpoint(this.auth);
+    };
+
+    constructor(auth: Basic) {
+        super(auth, '/profile');
+    }
+}
+
+/**
  * Class to manage and expose all endpoits and operations below '/rest/api/1.0/recent/'
  */
-export class RecentEndpoint extends EndpointService {
+export class ProfileRecentEndpoint extends EndpointService {
 
     constructor(auth: Basic) {
         super(auth, '/recent');
@@ -21,7 +40,7 @@ export class RecentEndpoint extends EndpointService {
             pageOptions: pageOptions
         });
         try {
-            if(permission){
+            if (permission) {
                 request.addQueryParam('permission', permission);
             }
             const result = await request.execute();
@@ -30,7 +49,5 @@ export class RecentEndpoint extends EndpointService {
             throw error;
         }
     }
-
-
 
 }
