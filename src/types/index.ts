@@ -704,6 +704,26 @@ export interface LicenseStatus {
     currentNumberOfUsers: number;
 }
 
+export interface MailHostConfigurationInput {
+    hostname: string;
+    port: number;
+    protocol: string;
+    'use-start-tls': boolean;
+    'require-start-tls': boolean;
+    username: string;
+    'sender-address': string;
+}
+
+export interface MailHostConfigurationOutput {
+    hostname: string;
+    port: number;
+    protocol: string;
+    'use-start-tls': boolean;
+    'require-start-tls': boolean;
+    username: string;
+    'sender-address': string;
+}
+
 export interface FilePath {
     components: string[];
     parent: string;

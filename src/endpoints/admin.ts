@@ -1,4 +1,4 @@
-import { AddGroupInput, AddUsersInput, Basic, ChangePasswordInput, ClusterOutput, CreateUserInput, EndpointService, GroupMembersOptions, LicenseOutput, Page, PageOptions, PermissionGroupOutput, User } from "../types";
+import { AddGroupInput, AddUsersInput, Basic, ChangePasswordInput, ClusterOutput, CreateUserInput, EndpointService, GroupMembersOptions, LicenseOutput, MailHostConfigurationInput, MailHostConfigurationOutput, Page, PageOptions, PermissionGroupOutput, User } from "../types";
 
 /**
  * Class to manage and expose all endpoits and operations below '/rest/api/1.0/projects/admin/groups'
@@ -374,6 +374,59 @@ export class AdminLicenseEndpoint extends EndpointService {
     }
 }
 
+/**
+ * Class to manage and expose all endpoits and operations below '/rest/api/1.0/projects/admin/mail-server'
+ */
+export class AdminMailServerEndpoint extends EndpointService {
+
+    constructor(auth: Basic) {
+        super(auth, '/mail-server');
+    }
+
+    /**
+     * Retrieves the current mail configuration 
+     * @returns {Promise<MailHostConfigurationOutput>} Promise with the mail host configuration data
+     */
+    async get(): Promise<MailHostConfigurationOutput> {
+        const request = this.doGet();
+        try {
+            const result = await request.execute();
+            return result.data as MailHostConfigurationOutput;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    /**
+     * Updates the mail configuration
+     * @param {MailHostConfigurationInput} mailServerInput Mail server data to update
+     * @returns {Promise<MailHostConfigurationOutput>} Promise with the updated mail host configuration data
+     */
+    async update(mailServerInput: MailHostConfigurationInput): Promise<MailHostConfigurationOutput> {
+        const request = this.doPut().asJson().withBody(mailServerInput);
+        try {
+            const result = await request.execute();
+            return result.data as MailHostConfigurationOutput;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    /**
+     * Deletes the current mail configuration
+     * @returns {Promise<void>} If not throw errors, operation finish succesfully
+     */
+    async delete(): Promise<void> {
+        const request = this.doDelete();
+        try {
+            const result = await request.execute();
+            return;
+        } catch (error) {
+            throw error;
+        }
+    }
+}
+
 
 /**
  * Class to manage and expose all endpoits and operations below '/rest/api/1.0/admin/*'
@@ -403,12 +456,21 @@ export class AdminEndpoint extends EndpointService {
     };
 
     /**
-     * Contains all operations related with licenses
+     * Contains all operations related with admin licenses
      * All paths and operations from '/rest/api/1.0/admin/license'. 
-     * @returns {AdminLicenseEndpoint} Get all operations about licenses
+     * @returns {AdminLicenseEndpoint} Get all operations about admin licenses
      */
     license = () => {
         return new AdminLicenseEndpoint(this.auth);
+    };
+
+    /**
+     * Contains all operations related with admin mail server
+     * All paths and operations from '/rest/api/1.0/admin/mail-server'. 
+     * @returns {AdminMailServerEndpoint} Get all operations about admin mail server
+     */
+    mailServer = () => {
+        return new AdminMailServerEndpoint(this.auth);
     };
 
     constructor(auth: Basic) {
