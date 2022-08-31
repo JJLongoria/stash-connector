@@ -753,6 +753,14 @@ export interface MarkupPreviewOutput {
     html: string;
 }
 
+export interface ReposOptions {
+    name?: string;
+    projectname?: string;
+    permission?: 'REPO_READ' | 'REPO_WRITE ' | 'REPO_ADMIN';
+    visibility?: 'public' | 'private';
+    pageOptions?: PageOptions;
+}
+
 export interface Link {
     url: string;
     rel: string;
