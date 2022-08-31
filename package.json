@@ -1,0 +1,51 @@
+{
+  "name": "stash-connector",
+  "productName": "Stash REST API Connetor",
+  "displayName": "Stash REST API Connetor",
+  "version": "0.0.1",
+  "description": "Module to handle and work with Atlassian Stash projects and repositories throug REST API. Admin your repositories and projects in Stash easy. This project is not an Atlassian official project but use the Atlassian Stash REST API",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "compile": "tsc -p ./ ",
+    "lint": "eslint src --ext ts",
+    "lint-fix": "eslint src --ext ts --fix",
+    "watch": "tsc -watch -p ./",
+    "test": "jest --coverage --runInBand"
+  },
+  "keywords": [
+    "Atlassian Stash REST",
+    "Stash REST",
+    "Atlassian Stash",
+    "Stash",
+    "Stash Repository",
+    "GIT"
+  ],
+  "author": "Juan José Longoria López (Kanko) <juanjoselongoria@gmail.com>",
+  "license": "GPLv3",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/JJLongoria/stash-connector"
+  },
+  "bugs": {
+    "url": "https://github.com/JJLongoria/stash-connector/issues",
+    "email": "juanjoselongoria@gmail.com"
+  },
+  "devDependencies": {
+    "@types/fs-extra": "^9.0.13",
+    "@types/jest": "^27.0.3",
+    "@types/node": "^12.12.47",
+    "@types/unzipper": "^0.10.4",
+    "@typescript-eslint/eslint-plugin": "^5.4.0",
+    "@typescript-eslint/parser": "^5.4.0",
+    "eslint": "^8.3.0",
+    "jest": "^27.4.3",
+    "ts-jest": "^27.0.7",
+    "typescript": "^3.9.6"
+  },
+  "dependencies": {
+    "axios": "^0.27.2",
+    "fs-extra": "^9.1.0",
+    "unzipper": "^0.10.11"
+  }
+}
