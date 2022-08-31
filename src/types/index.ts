@@ -638,6 +638,17 @@ export interface AddGroupInput {
     groups: string[];
 }
 
+export interface RemoveGroupInput {
+    context: string;
+    itemName: string;
+}
+
+export interface ChangePasswordInput {
+    password: string;
+    passwordConfirm: string;
+    name: string;
+}
+
 export interface GroupMembersOptions {
     context?: string;
     filter?: string;

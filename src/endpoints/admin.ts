@@ -1,4 +1,4 @@
-import { AddGroupInput, AddUsersInput, Basic, CreateUserInput, EndpointService, GroupMembersOptions, Page, PageOptions, PermissionGroupOutput, User } from "../types";
+import { AddGroupInput, AddUsersInput, Basic, ChangePasswordInput, CreateUserInput, EndpointService, GroupMembersOptions, Page, PageOptions, PermissionGroupOutput, User } from "../types";
 
 /**
  * Class to manage and expose all endpoits and operations below '/rest/api/1.0/projects/admin/groups'
@@ -181,6 +181,27 @@ export class AdminUsersEndpoint extends EndpointService {
     }
 
     /**
+     * Rename a user
+     * @param {string} oldName Name of the user 
+     * @param {string} newName Name of the user 
+     * @returns {Promise<User>} Promise with the updated user data
+     */
+    async rename(oldName: string, newName: string): Promise<User> {
+        const request = this.doPost({
+            param: 'rename'
+        }).asJson().withBody({
+            name: oldName,
+            newName: newName,
+        });
+        try {
+            const result = await request.execute();
+            return result.data as User;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    /**
      * Deletes the specified user, removing them from the system. This also removes any permissions that may have been granted to the user
      * @param {string} name Name of the user 
      * @returns {Promise<User>} Promise with the deleted user data
@@ -205,6 +226,27 @@ export class AdminUsersEndpoint extends EndpointService {
         const request = this.doPost({
             param: 'add-groups'
         }).asJson().withBody(addGroupInput);
+        try {
+            const result = await request.execute();
+            return;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    /**
+     * Remove a user from a group.
+     * @param {string} user The username to remove it
+     * @param {string} group The group to remove from
+     * @returns {Promise<void>} If not throw errors, operation finish succesfully
+     */
+    async removeGroup(user: string, group: string): Promise<void> {
+        const request = this.doPost({
+            param: 'remove-group'
+        }).asJson().withBody({
+            context: user,
+            itemName: group,
+        });
         try {
             const result = await request.execute();
             return;
@@ -249,7 +291,42 @@ export class AdminUsersEndpoint extends EndpointService {
         }
     }
 
+    /**
+     * Clears any CAPTCHA challenge that may constrain the user with the supplied username when they authenticate. Additionally any counter or metric that contributed towards the user being issued the CAPTCHA challenge (for instance too many consecutive failed logins) will also be reset
+     * @param {string} [name] The username to clear captchas
+     * @returns {Promise<void>} If not throw errors, operation finish succesfully
+     */
+    async captcha(name: string): Promise<void> {
+        const request = this.doDelete({
+            param: 'captcha'
+        });
+        try {
+            request.addQueryParam('name', name);
+            const result = await request.execute();
+            return;
+        } catch (error) {
+            throw error;
+        }
+    }
 
+
+    /**
+     * Update a user's password. 
+     * @param {ChangePasswordInput} changePasswordInput Change Password input data
+     * @returns {Promise<void>} If not throw errors, operation finish succesfully
+     */
+    async changePassword(changePasswordInput: ChangePasswordInput): Promise<void> {
+        const request = this.doPut({
+            param: 'credentials'
+        }).asJson().withBody(changePasswordInput);
+        try {
+            request.addQueryParam('name', name);
+            const result = await request.execute();
+            return;
+        } catch (error) {
+            throw error;
+        }
+    }
 
 }
 
