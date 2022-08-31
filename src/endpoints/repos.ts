@@ -1,7 +1,7 @@
 import { Basic, EndpointService, Page, RepoOutput, ReposOptions } from "../types";
 
 /**
- * Class to manage and expose all endpoits and operations below '/rest/api/1.0/groups/*'
+ * Class to manage and expose all endpoits and operations below '/rest/api/1.0/repos/*'
  */
 export class ReposEndpoint extends EndpointService {
 

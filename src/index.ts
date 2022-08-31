@@ -8,6 +8,7 @@ import { ProjectsEndpoint } from "./endpoints/projects";
 import { ProfileEndpoint } from "./endpoints/profile";
 import { Basic, BasicAuth } from "./types";
 import { ReposEndpoint } from "./endpoints/repos";
+import { TasksEndpoint } from "./endpoints/task";
 export * from "./types";
 
 /**
@@ -81,13 +82,18 @@ export class StashConnector {
     /**
      * Contains all operations from '/rest/api/1.0/projects/*'.
      */
-     projects: ProjectsEndpoint;
+    projects: ProjectsEndpoint;
 
 
     /**
-    * Contains all operations from '/rest/api/1.0/repos/.
-    */
-     repos: ReposEndpoint;
+    * Contains all operations from '/rest/api/1.0/repos/*.
+     */
+    repos: ReposEndpoint;
+
+    /**
+     * Contains all operations from '/rest/api/1.0/tasks/*.
+     */
+    tasks: TasksEndpoint;
 
     /**
      * Instance new Stash Connector with user credentials and stash host.
@@ -104,6 +110,7 @@ export class StashConnector {
         this.markup = new MarkupEndpoint(this.auth);
         this.profile = new ProfileEndpoint(this.auth);
         this.repos = new ReposEndpoint(this.auth);
+        this.tasks = new TasksEndpoint(this.auth);
     }
 }
 

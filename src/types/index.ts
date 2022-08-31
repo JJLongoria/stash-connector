@@ -584,6 +584,12 @@ export interface TaskOutput {
     state: 'OPEN' | 'RESOLVED';
 }
 
+export interface TaskInput {
+    anchor?: CommitCommentOutput;
+    text?: string;
+    state?: 'OPEN' | 'RESOLVED';
+}
+
 export interface TaskCountOutput {
     open: number;
     resolved: number;
