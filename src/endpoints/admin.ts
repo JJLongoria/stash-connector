@@ -1,4 +1,4 @@
-import { AddGroupInput, AddUsersInput, Basic, ChangePasswordInput, ClusterOutput, CreateUserInput, EndpointService, GroupMembersOptions, LicenseOutput, MailHostConfigurationInput, MailHostConfigurationOutput, Page, PageOptions, PermissionGroupOutput, User } from "../types";
+import { AddGroupInput, AddUsersInput, Basic, ChangePasswordInput, ClusterOutput, CreateUserInput, EndpointService, GroupMembersOptions, LicenseOutput, MailHostConfigurationInput, MailHostConfigurationOutput, Page, PageOptions, PermissionGroupOutput, PermissionGroupsOutput, PermissionUserOutput, PermissionUsersOutput, User } from "../types";
 
 /**
  * Class to manage and expose all endpoits and operations below '/rest/api/1.0/projects/admin/groups'
@@ -490,6 +490,212 @@ export class AdminMailServerSenderAddressEndpoint extends EndpointService {
     }
 }
 
+/**
+ * Class to manage and expose all endpoits and operations below '/rest/api/1.0/admin/permissions'
+ */
+export class AdminPermissionsEndpoint extends EndpointService {
+
+    /**
+     * Contains all operations related with admin user permissions
+     * All paths and operations from '/rest/api/1.0/admin/permissions/users'. 
+     * @returns {AdminPermissionsUsersEndpoint} Get all operations about admin user permissions
+     */
+    users = (): AdminPermissionsUsersEndpoint => {
+        return new AdminPermissionsUsersEndpoint(this.auth);
+    };
+
+    /**
+     * Contains all operations related with admin groups permissions
+     * All paths and operations from '/rest/api/1.0/admin/permissions/groups'. 
+     * @returns {AdminPermissionsGroupsEndpoint} Get all operations about admin groups permissions
+     */
+    groups = (): AdminPermissionsGroupsEndpoint => {
+        return new AdminPermissionsGroupsEndpoint(this.auth);
+    };
+
+    constructor(auth: Basic) {
+        super(auth, '/permissions');
+    }
+
+}
+
+/**
+ * Class to manage and expose all endpoits and operations below '/rest/api/1.0/admin/permissions/users'
+ */
+export class AdminPermissionsUsersEndpoint extends EndpointService {
+
+    constructor(auth: Basic) {
+        super(auth, '/users');
+    }
+
+    /**
+     * Retrieve a page of users that have no granted global permissions.
+     * @param {string} [filter] If specified only user names containing the supplied string will be returned
+     * @param {PageOptions} [pageOptions] Page options to paginate results (or obtain more results per page)
+     * @returns {Promise<Page<PermissionUserOutput>>} Promise with the requested page data.
+     */
+    async none(filter?: string, pageOptions?: PageOptions): Promise<Page<PermissionUserOutput>> {
+        const request = this.doGet({
+            param: 'none',
+            pageOptions: pageOptions,
+        });
+        try {
+            if (filter) {
+                request.addQueryParam('filter', filter);
+            }
+            const result = await request.execute();
+            return result.data as Page<PermissionUserOutput>;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    /**
+     * Retrieve a page of users that have been granted at least one global permission.
+     * @param {string} [filter] If specified only user names containing the supplied string will be returned
+     * @param {PageOptions} [pageOptions] Page options to paginate results (or obtain more results per page)
+     * @returns {Promise<Page<PermissionUsersOutput>>} Promise with the requested page data.
+     */
+    async list(filter?: string, pageOptions?: PageOptions): Promise<Page<PermissionUsersOutput>> {
+        const request = this.doGet({
+            pageOptions: pageOptions,
+        });
+        try {
+            if (filter) {
+                request.addQueryParam('filter', filter);
+            }
+            const result = await request.execute();
+            return result.data as Page<PermissionUsersOutput>;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    /**
+     * Promote or demote the global permission level of a user.
+     * @param {string} name The name of the user 
+     * @param {string} permission The permission to grant
+     * @returns {Promise<void>} If not throw errors, operation finish succesfully.
+     */
+    async update(name: string, permission: 'PROJECT_READ' | 'PROJECT_WRITE' | 'PROJECT_ADMIN'): Promise<void> {
+        const request = this.doPut();
+        try {
+            request.addQueryParam('name', name);
+            request.addQueryParam('permission', permission);
+            const result = await request.execute();
+            return;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    /**
+     * Revoke all global permissions for a user
+     * @param {string} name The name of the user
+     * @returns {Promise<void>} If not throw errors, operation finish succesfully.
+     */
+    async revoke(name: string): Promise<void> {
+        const request = this.doDelete();
+        try {
+            request.addQueryParam('name', name);
+            const result = await request.execute();
+            return;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+
+}
+
+/**
+ * Class to manage and expose all endpoits and operations below '/rest/api/1.0/admin/permissions/groups'
+ */
+export class AdminPermissionsGroupsEndpoint extends EndpointService {
+
+    constructor(auth: Basic) {
+        super(auth, '/groups');
+    }
+
+    /**
+     * Retrieve a page of groups that have no granted global permissions
+     * @param {string} [filter] If specified only group names containing the supplied string will be returned
+     * @param {PageOptions} [pageOptions] Page options to paginate results (or obtain more results per page)
+     * @returns {Promise<Page<PermissionGroupOutput>>} Promise with the requested page data.
+     */
+    async none(filter?: string, pageOptions?: PageOptions): Promise<Page<PermissionGroupOutput>> {
+        const request = this.doGet({
+            param: 'none',
+            pageOptions: pageOptions,
+        });
+        try {
+            if (filter) {
+                request.addQueryParam('filter', filter);
+            }
+            const result = await request.execute();
+            return result.data as Page<PermissionGroupOutput>;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    /**
+     * Retrieve a page of groups that have been granted at least one global permission. 
+     * @param {string} [filter] If specified only group names containing the supplied string will be returned
+     * @param {PageOptions} [pageOptions] Page options to paginate results (or obtain more results per page)
+     * @returns {Promise<Page<PermissionGroupsOutput>>} Promise with the requested page data.
+     */
+    async list(filter?: string, pageOptions?: PageOptions): Promise<Page<PermissionGroupsOutput>> {
+        const request = this.doGet({
+            pageOptions: pageOptions,
+        });
+        try {
+            if (filter) {
+                request.addQueryParam('filter', filter);
+            }
+            const result = await request.execute();
+            return result.data as Page<PermissionGroupsOutput>;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    /**
+     * Promote or demote a user's global permission level
+     * @param {string} name The name of the group 
+     * @param {string} permission The permission to grant
+     * @returns {Promise<void>} If not throw errors, operation finish succesfully.
+     */
+    async update(name: string, permission: 'LICENSED_USER' | 'PROJECT_CREATE' | 'ADMIN' | 'SYS_ADMIN'): Promise<void> {
+        const request = this.doPut();
+        try {
+            request.addQueryParam('name', name);
+            request.addQueryParam('permission', permission);
+            const result = await request.execute();
+            return;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    /**
+     * Revoke all global permissions for a group
+     * @param {string} name The name of the group
+     * @returns {Promise<void>} If not throw errors, operation finish succesfully.
+     */
+    async revoke(name: string): Promise<void> {
+        const request = this.doDelete();
+        try {
+            request.addQueryParam('name', name);
+            const result = await request.execute();
+            return;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+}
+
 
 /**
  * Class to manage and expose all endpoits and operations below '/rest/api/1.0/admin/*'
@@ -534,6 +740,15 @@ export class AdminEndpoint extends EndpointService {
      */
     mailServer = () => {
         return new AdminMailServerEndpoint(this.auth);
+    };
+
+    /**
+     * Contains all operations related with admin permissions
+     * All paths and operations from '/rest/api/1.0/admin/permissions'. 
+     * @returns {AdminPermissionsEndpoint} Get all operations about admin permissions
+     */
+    permissions = () => {
+        return new AdminPermissionsEndpoint(this.auth);
     };
 
     constructor(auth: Basic) {
