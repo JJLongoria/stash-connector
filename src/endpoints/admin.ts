@@ -1,4 +1,4 @@
-import { AddGroupInput, AddUsersInput, Basic, ChangePasswordInput, CreateUserInput, EndpointService, GroupMembersOptions, Page, PageOptions, PermissionGroupOutput, User } from "../types";
+import { AddGroupInput, AddUsersInput, Basic, ChangePasswordInput, ClusterOutput, CreateUserInput, EndpointService, GroupMembersOptions, Page, PageOptions, PermissionGroupOutput, User } from "../types";
 
 /**
  * Class to manage and expose all endpoits and operations below '/rest/api/1.0/projects/admin/groups'
@@ -330,6 +330,8 @@ export class AdminUsersEndpoint extends EndpointService {
 
 }
 
+
+
 /**
  * Class to manage and expose all endpoits and operations below '/rest/api/1.0/admin/*'
  * /rest/api/1.0/admin/groups
@@ -359,6 +361,22 @@ export class AdminEndpoint extends EndpointService {
 
     constructor(auth: Basic) {
         super(auth, '/admin');
+    }
+
+    /**
+     * Gets information about the nodes that currently make up the stash cluster
+     * @returns {Promise<ClusterOutput>} Promise with the updated project data
+     */
+    async cluster(): Promise<ClusterOutput> {
+        const request = this.doGet({
+            param: 'cluster'
+        });
+        try {
+            const result = await request.execute();
+            return result.data as ClusterOutput;
+        } catch (error) {
+            throw error;
+        }
     }
 
 }

@@ -664,6 +664,24 @@ export interface CreateUserInput {
     notify: string;
 }
 
+export interface ClusterOutput {
+    localNode: ClusterNode;
+    nodes: ClusterNode[];
+    running: boolean;
+}
+
+export interface ClusterNode {
+    id: string;
+    name: string;
+    address: ClusterAddress;
+    local: boolean;
+}
+
+export interface ClusterAddress {
+    hostName: string;
+    port: number;
+}
+
 export interface FilePath {
     components: string[];
     parent: string;
