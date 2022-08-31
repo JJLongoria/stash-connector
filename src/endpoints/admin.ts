@@ -1,4 +1,4 @@
-import { AddGroupInput, AddUsersInput, Basic, ChangePasswordInput, ClusterOutput, CreateUserInput, EndpointService, GroupMembersOptions, Page, PageOptions, PermissionGroupOutput, User } from "../types";
+import { AddGroupInput, AddUsersInput, Basic, ChangePasswordInput, ClusterOutput, CreateUserInput, EndpointService, GroupMembersOptions, LicenseOutput, Page, PageOptions, PermissionGroupOutput, User } from "../types";
 
 /**
  * Class to manage and expose all endpoits and operations below '/rest/api/1.0/projects/admin/groups'
@@ -330,6 +330,49 @@ export class AdminUsersEndpoint extends EndpointService {
 
 }
 
+/**
+ * Class to manage and expose all endpoits and operations below '/rest/api/1.0/projects/admin/license'
+ */
+export class AdminLicenseEndpoint extends EndpointService {
+
+    constructor(auth: Basic) {
+        super(auth, '/license');
+    }
+
+    /**
+     * Retrieves details about the current license, as well as the current status of the system with regards to the installed license. 
+     * The status includes the current number of users applied toward the license limit, as well as any status messages about the license 
+     * (warnings about expiry or user counts exceeding license limits). 
+     * @returns {Promise<LicenseOutput>} Promise with the updated project data
+     */
+    async get(): Promise<LicenseOutput> {
+        const request = this.doGet();
+        try {
+            const result = await request.execute();
+            return result.data as LicenseOutput;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    /**
+     * Decodes the provided encoded license and sets it as the active license. 
+     * If no license was provided, a 400 is returned. If the license cannot be decoded, or cannot be applied, a 409 is returned
+     * @param {string} license new license to update
+     * @returns {Promise<LicenseOutput>} Promise with the updated project data
+     */
+    async update(license: string): Promise<LicenseOutput> {
+        const request = this.doPost().asJson().withBody({
+            license: license,
+        });
+        try {
+            const result = await request.execute();
+            return result.data as LicenseOutput;
+        } catch (error) {
+            throw error;
+        }
+    }
+}
 
 
 /**
@@ -359,6 +402,15 @@ export class AdminEndpoint extends EndpointService {
         return new AdminUsersEndpoint(this.auth);
     };
 
+    /**
+     * Contains all operations related with licenses
+     * All paths and operations from '/rest/api/1.0/admin/license'. 
+     * @returns {AdminLicenseEndpoint} Get all operations about licenses
+     */
+    license = () => {
+        return new AdminLicenseEndpoint(this.auth);
+    };
+
     constructor(auth: Basic) {
         super(auth, '/admin');
     }
@@ -378,5 +430,7 @@ export class AdminEndpoint extends EndpointService {
             throw error;
         }
     }
+
+
 
 }

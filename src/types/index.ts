@@ -682,6 +682,28 @@ export interface ClusterAddress {
     port: number;
 }
 
+export interface LicenseOutput {
+    creationDate: number;
+    purchaseDate: number;
+    expiryDate: number;
+    numberOfDaysBeforeExpiry: number;
+    maintenanceExpiryDate: number;
+    numberOfDaysBeforeMaintenanceExpiry: number;
+    gracePeriodEndDate: number;
+    numberOfDaysBeforeGracePeriodExpiry: number;
+    maximumNumberOfUsers: number;
+    unlimitedNumberOfUsers: boolean;
+    serverId: string;
+    supportEntitlementNumber: string;
+    license: string;
+    status: LicenseStatus;
+}
+
+export interface LicenseStatus {
+    serverId: string;
+    currentNumberOfUsers: number;
+}
+
 export interface FilePath {
     components: string[];
     parent: string;
