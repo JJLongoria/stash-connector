@@ -107,7 +107,6 @@ export class StashConnector {
      */
     constructor(auth: BasicAuth) {
         this.auth = new Basic(auth);
-        this.projects = new ProjectsEndpoint(this.auth);
         this.admin = new AdminEndpoint(this.auth);
         this.applicationProperties = new ApplicationEndpoint(this.auth);
         this.groups = new GroupsEndpoint(this.auth);
@@ -115,6 +114,7 @@ export class StashConnector {
         this.logs = new LogsEndpoint(this.auth);
         this.markup = new MarkupEndpoint(this.auth);
         this.profile = new ProfileEndpoint(this.auth);
+        this.projects = new ProjectsEndpoint(this.auth);
         this.repos = new ReposEndpoint(this.auth);
         this.tasks = new TasksEndpoint(this.auth);
         this.users = new UsersEndpoint(this.auth);

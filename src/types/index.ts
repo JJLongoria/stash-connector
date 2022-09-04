@@ -64,14 +64,7 @@ export class EndpointService {
     }
 
     private setPageOptions(request: HTTPRequest, pageOptions?: PageOptions) {
-        if (pageOptions) {
-            if (pageOptions.limit) {
-                request.addQueryParam('limit', pageOptions.limit);
-            }
-            if (pageOptions.start) {
-                request.addQueryParam('start', pageOptions.start);
-            }
-        }
+        this.processOptions(request, pageOptions);
     }
 
     private getEndpoint(options?: EndpointServiceOptions) {
@@ -166,11 +159,6 @@ export class Page<T> {
     start: number = 0;
     filter?: any;
     nextPageStart?: number = 0;
-    options: PageOptions = {
-        limit: 25,
-        start: 0,
-    };
-
 }
 
 export class Avatar {
@@ -184,7 +172,7 @@ export class Avatar {
     }
 
     getAvatar() {
-        return 'data:image/' + this.type + ';base64,' + btoa(this.content) + '';
+        return 'data:image/' + this.type + ';base64,' + this.content + '';
     }
 }
 
@@ -197,10 +185,10 @@ export interface ProjectInput {
     key: string;
     name: string;
     description: string;
-    avatar: Avatar;
+    avatar?: Avatar;
 }
 
-export interface ProjectOutput extends RestOutput {
+export interface Project extends RestOutput {
     key: string;
     id: string;
     name: string;
@@ -242,7 +230,7 @@ export interface RepoOutput extends RestOutput {
     state: string;
     statusMessage: string;
     forkable: boolean;
-    project: ProjectOutput;
+    project: Project;
     public: boolean;
     cloneUr: string;
 }
@@ -456,19 +444,19 @@ export interface PermissionUserOutput {
     deletable: boolean;
 }
 
-export interface PermissionGroupOutput {
+export interface Group {
     name: string;
     deletable: boolean;
 }
 
 export interface PermissionUsersOutput {
     user: User;
-    permission: string;
+    permission: 'LICENSED_USER' | 'PROJECT_CREATE' | 'ADMIN' | 'SYS_ADMIN';
 }
 
-export interface PermissionGroupsOutput {
-    group: PermissionGroupOutput;
-    permission: string;
+export interface PermissionGroups {
+    group: Group;
+    permission: 'LICENSED_USER' | 'PROJECT_CREATE' | 'ADMIN' | 'SYS_ADMIN';
 }
 
 export interface RepoPullRequestOptions {
@@ -694,7 +682,7 @@ export interface ClusterAddress {
     port: number;
 }
 
-export interface LicenseOutput {
+export interface License {
     creationDate: number;
     purchaseDate: number;
     expiryDate: number;
@@ -726,7 +714,7 @@ export interface MailHostConfigurationInput {
     'sender-address': string;
 }
 
-export interface MailHostConfigurationOutput {
+export interface MailHostConfiguration {
     hostname: string;
     port: number;
     protocol: string;

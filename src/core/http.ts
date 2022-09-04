@@ -7,11 +7,12 @@ export class HTTPRequest {
 
     private readonly CONTENT_TYPE_HEADER = 'Content-Type';
     private readonly JSON_CONTENT_TYPE = 'application/json';
+    private readonly FILE_TYPE = 'multipart/form-data';
     private method: 'GET' | 'POST' | 'PUT' | 'DELETE' = 'GET';
     private endpoint: string = '';
     private headers?: { [key: string]: string };
     private queryParams?: { [key: string]: string };
-    private body?: string;
+    private body?: any;
 
     constructor(method: 'GET' | 'POST' | 'PUT' | 'DELETE', endpoint: string) {
         this.method = method;
@@ -25,6 +26,11 @@ export class HTTPRequest {
 
     asJson() {
         this.addHeader(this.CONTENT_TYPE_HEADER, this.JSON_CONTENT_TYPE);
+        return this;
+    }
+
+    asFile() {
+        this.addHeader(this.CONTENT_TYPE_HEADER, this.FILE_TYPE);
         return this;
     }
 
@@ -52,8 +58,13 @@ export class HTTPRequest {
             method: this.method,
             url: this.endpoint,
             headers: this.headers,
-            data: this.body ? this.body : undefined,
+            data: this.body,
         };
+        if (this.headers && this.headers[this.CONTENT_TYPE_HEADER] === this.FILE_TYPE) {
+            const formData = new FormData();
+            formData.append("image", this.body);
+            options.data = formData;
+        }
         return makeRequest(options);
     }
 

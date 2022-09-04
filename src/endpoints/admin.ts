@@ -1,4 +1,4 @@
-import { AddGroupInput, AddUsersInput, Basic, ChangePasswordInput, ClusterOutput, CreateUserInput, EndpointService, GroupMembersOptions, LicenseOutput, MailHostConfigurationInput, MailHostConfigurationOutput, Page, PageOptions, PermissionGroupOutput, PermissionGroupsOutput, PermissionUserOutput, PermissionUsersOutput, User } from "../types";
+import { AddGroupInput, AddUsersInput, Basic, ChangePasswordInput, ClusterOutput, CreateUserInput, EndpointService, GroupMembersOptions, License, MailHostConfigurationInput, MailHostConfiguration, Page, PageOptions, Group, PermissionGroups, PermissionUserOutput, PermissionUsersOutput, User } from "../types";
 
 /**
  * Class to manage and expose all endpoits and operations below '/rest/api/1.0/projects/admin/groups'
@@ -13,9 +13,9 @@ export class AdminGroupsEndpoint extends EndpointService {
      * Retrieve a page of groups
      * @param {string} [filter] If specified only group names containing the supplied string will be returned
      * @param {PageOptions} [pageOptions] Page options to paginate results (or obtain more results per page)
-     * @returns {Promise<Page<PermissionGroupOutput>>} Promise with the updated project data
+     * @returns {Promise<Page<Group>>} Promise with the updated project data
      */
-    async list(filter?: string, pageOptions?: PageOptions): Promise<Page<PermissionGroupOutput>> {
+    async list(filter?: string, pageOptions?: PageOptions): Promise<Page<Group>> {
         const request = this.doGet({
             pageOptions: pageOptions,
         });
@@ -24,7 +24,7 @@ export class AdminGroupsEndpoint extends EndpointService {
                 request.addQueryParam('filter', filter);
             }
             const result = await request.execute();
-            return result.data as Page<PermissionGroupOutput>;
+            return result.data as Page<Group>;
         } catch (error) {
             throw error;
         }
@@ -33,14 +33,14 @@ export class AdminGroupsEndpoint extends EndpointService {
     /**
      * Create a new group
      * @param {string} name Name of the group 
-     * @returns {Promise<PermissionGroupOutput>} Promise with the created group data
+     * @returns {Promise<Group>} Promise with the created group data
      */
-    async create(name: string): Promise<PermissionGroupOutput> {
+    async create(name: string): Promise<Group> {
         const request = this.doPost();
         try {
             request.addQueryParam('name', name);
             const result = await request.execute();
-            return result.data as PermissionGroupOutput;
+            return result.data as Group;
         } catch (error) {
             throw error;
         }
@@ -49,14 +49,14 @@ export class AdminGroupsEndpoint extends EndpointService {
     /**
      * Deletes the specified group, removing them from the system. This also removes any permissions that may have been granted to the group
      * @param {string} name Name of the group 
-     * @returns {Promise<PermissionGroupOutput>} Promise with the deleted group data
+     * @returns {Promise<Group>} Promise with the deleted group data
      */
-    async delete(name: string): Promise<PermissionGroupOutput> {
+    async delete(name: string): Promise<Group> {
         const request = this.doDelete();
         try {
             request.addQueryParam('name', name);
             const result = await request.execute();
-            return result.data as PermissionGroupOutput;
+            return result.data as Group;
         } catch (error) {
             throw error;
         }
@@ -182,8 +182,8 @@ export class AdminUsersEndpoint extends EndpointService {
 
     /**
      * Rename a user
-     * @param {string} oldName Name of the user 
-     * @param {string} newName Name of the user 
+     * @param {string} oldName Old Name of the user 
+     * @param {string} newName New Name of the user 
      * @returns {Promise<User>} Promise with the updated user data
      */
     async rename(oldName: string, newName: string): Promise<User> {
@@ -218,7 +218,7 @@ export class AdminUsersEndpoint extends EndpointService {
     }
 
     /**
-     * Add multiple users to a group.
+     * Add User to a multiple groups.
      * @param {AddGroupInput} addUsersInput Add users input data
      * @returns {Promise<void>} If not throw errors, operation finish succesfully
      */
@@ -258,16 +258,16 @@ export class AdminUsersEndpoint extends EndpointService {
     /**
      * Retrieves a list of groups the specified user is a member of.
      * @param {GroupMembersOptions} [groupMemberOptions] Group Members options including the paginations options. - pageOptions: Page options to paginate results (or obtain more results per page)
-     * @returns {Promise<Page<PermissionGroupOutput>>} If not throw errors, operation finish succesfully
+     * @returns {Promise<Page<Group>>} If not throw errors, operation finish succesfully
      */
-    async groups(groupMemberOptions?: GroupMembersOptions): Promise<Page<PermissionGroupOutput>> {
+    async groups(groupMemberOptions?: GroupMembersOptions): Promise<Page<Group>> {
         const request = this.doPost({
             param: 'more-members'
         });
         try {
             this.processOptions(request, groupMemberOptions);
             const result = await request.execute();
-            return result.data as Page<PermissionGroupOutput>;
+            return result.data as Page<Group>;
         } catch (error) {
             throw error;
         }
@@ -276,16 +276,16 @@ export class AdminUsersEndpoint extends EndpointService {
     /**
      * Retrieves a list of groups the specified user is not a member of.
      * @param {GroupMembersOptions} [groupMemberOptions] Group Members options including the paginations options. - pageOptions: Page options to paginate results (or obtain more results per page)
-     * @returns {Promise<Page<PermissionGroupOutput>>} If not throw errors, operation finish succesfully
+     * @returns {Promise<Page<Group>>} If not throw errors, operation finish succesfully
      */
-    async nonGroups(groupMemberOptions?: GroupMembersOptions): Promise<Page<PermissionGroupOutput>> {
+    async nonGroups(groupMemberOptions?: GroupMembersOptions): Promise<Page<Group>> {
         const request = this.doPost({
             param: 'more-non-members'
         });
         try {
             this.processOptions(request, groupMemberOptions);
             const result = await request.execute();
-            return result.data as Page<PermissionGroupOutput>;
+            return result.data as Page<Group>;
         } catch (error) {
             throw error;
         }
@@ -308,7 +308,6 @@ export class AdminUsersEndpoint extends EndpointService {
             throw error;
         }
     }
-
 
     /**
      * Update a user's password. 
@@ -343,13 +342,13 @@ export class AdminLicenseEndpoint extends EndpointService {
      * Retrieves details about the current license, as well as the current status of the system with regards to the installed license. 
      * The status includes the current number of users applied toward the license limit, as well as any status messages about the license 
      * (warnings about expiry or user counts exceeding license limits). 
-     * @returns {Promise<LicenseOutput>} Promise with the updated project data
+     * @returns {Promise<License>} Promise with the updated project data
      */
-    async get(): Promise<LicenseOutput> {
+    async get(): Promise<License> {
         const request = this.doGet();
         try {
             const result = await request.execute();
-            return result.data as LicenseOutput;
+            return result.data as License;
         } catch (error) {
             throw error;
         }
@@ -359,15 +358,15 @@ export class AdminLicenseEndpoint extends EndpointService {
      * Decodes the provided encoded license and sets it as the active license. 
      * If no license was provided, a 400 is returned. If the license cannot be decoded, or cannot be applied, a 409 is returned
      * @param {string} license new license to update
-     * @returns {Promise<LicenseOutput>} Promise with the updated project data
+     * @returns {Promise<License>} Promise with the updated project data
      */
-    async update(license: string): Promise<LicenseOutput> {
+    async update(license: string): Promise<License> {
         const request = this.doPost().asJson().withBody({
             license: license,
         });
         try {
             const result = await request.execute();
-            return result.data as LicenseOutput;
+            return result.data as License;
         } catch (error) {
             throw error;
         }
@@ -395,13 +394,13 @@ export class AdminMailServerEndpoint extends EndpointService {
 
     /**
      * Retrieves the current mail configuration 
-     * @returns {Promise<MailHostConfigurationOutput>} Promise with the mail host configuration data
+     * @returns {Promise<MailHostConfiguration>} Promise with the mail host configuration data
      */
-    async get(): Promise<MailHostConfigurationOutput> {
+    async get(): Promise<MailHostConfiguration> {
         const request = this.doGet();
         try {
             const result = await request.execute();
-            return result.data as MailHostConfigurationOutput;
+            return result.data as MailHostConfiguration;
         } catch (error) {
             throw error;
         }
@@ -410,13 +409,13 @@ export class AdminMailServerEndpoint extends EndpointService {
     /**
      * Updates the mail configuration
      * @param {MailHostConfigurationInput} mailServerInput Mail server data to update
-     * @returns {Promise<MailHostConfigurationOutput>} Promise with the updated mail host configuration data
+     * @returns {Promise<MailHostConfiguration>} Promise with the updated mail host configuration data
      */
-    async update(mailServerInput: MailHostConfigurationInput): Promise<MailHostConfigurationOutput> {
+    async update(mailServerInput: MailHostConfigurationInput): Promise<MailHostConfiguration> {
         const request = this.doPut().asJson().withBody(mailServerInput);
         try {
             const result = await request.execute();
-            return result.data as MailHostConfigurationOutput;
+            return result.data as MailHostConfiguration;
         } catch (error) {
             throw error;
         }
@@ -532,9 +531,9 @@ export class AdminPermissionsUsersEndpoint extends EndpointService {
      * Retrieve a page of users that have no granted global permissions.
      * @param {string} [filter] If specified only user names containing the supplied string will be returned
      * @param {PageOptions} [pageOptions] Page options to paginate results (or obtain more results per page)
-     * @returns {Promise<Page<PermissionUserOutput>>} Promise with the requested page data.
+     * @returns {Promise<Page<PermissionUsersOutput>>} Promise with the requested page data.
      */
-    async none(filter?: string, pageOptions?: PageOptions): Promise<Page<PermissionUserOutput>> {
+    async none(filter?: string, pageOptions?: PageOptions): Promise<Page<PermissionUsersOutput>> {
         const request = this.doGet({
             param: 'none',
             pageOptions: pageOptions,
@@ -544,7 +543,7 @@ export class AdminPermissionsUsersEndpoint extends EndpointService {
                 request.addQueryParam('filter', filter);
             }
             const result = await request.execute();
-            return result.data as Page<PermissionUserOutput>;
+            return result.data as Page<PermissionUsersOutput>;
         } catch (error) {
             throw error;
         }
@@ -621,9 +620,9 @@ export class AdminPermissionsGroupsEndpoint extends EndpointService {
      * Retrieve a page of groups that have no granted global permissions
      * @param {string} [filter] If specified only group names containing the supplied string will be returned
      * @param {PageOptions} [pageOptions] Page options to paginate results (or obtain more results per page)
-     * @returns {Promise<Page<PermissionGroupOutput>>} Promise with the requested page data.
+     * @returns {Promise<Page<Group>>} Promise with the requested page data.
      */
-    async none(filter?: string, pageOptions?: PageOptions): Promise<Page<PermissionGroupOutput>> {
+    async none(filter?: string, pageOptions?: PageOptions): Promise<Page<Group>> {
         const request = this.doGet({
             param: 'none',
             pageOptions: pageOptions,
@@ -633,7 +632,7 @@ export class AdminPermissionsGroupsEndpoint extends EndpointService {
                 request.addQueryParam('filter', filter);
             }
             const result = await request.execute();
-            return result.data as Page<PermissionGroupOutput>;
+            return result.data as Page<Group>;
         } catch (error) {
             throw error;
         }
@@ -643,9 +642,9 @@ export class AdminPermissionsGroupsEndpoint extends EndpointService {
      * Retrieve a page of groups that have been granted at least one global permission. 
      * @param {string} [filter] If specified only group names containing the supplied string will be returned
      * @param {PageOptions} [pageOptions] Page options to paginate results (or obtain more results per page)
-     * @returns {Promise<Page<PermissionGroupsOutput>>} Promise with the requested page data.
+     * @returns {Promise<Page<PermissionGroups>>} Promise with the requested page data.
      */
-    async list(filter?: string, pageOptions?: PageOptions): Promise<Page<PermissionGroupsOutput>> {
+    async list(filter?: string, pageOptions?: PageOptions): Promise<Page<PermissionGroups>> {
         const request = this.doGet({
             pageOptions: pageOptions,
         });
@@ -654,7 +653,7 @@ export class AdminPermissionsGroupsEndpoint extends EndpointService {
                 request.addQueryParam('filter', filter);
             }
             const result = await request.execute();
-            return result.data as Page<PermissionGroupsOutput>;
+            return result.data as Page<PermissionGroups>;
         } catch (error) {
             throw error;
         }

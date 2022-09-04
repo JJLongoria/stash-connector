@@ -1,7 +1,7 @@
 {
   "name": "stash-connector",
-  "productName": "Stash REST API Connetor",
-  "displayName": "Stash REST API Connetor",
+  "productName": "Atlassian Stash REST API Connetor",
+  "displayName": "Atlassian Stash REST API Connetor",
   "version": "0.0.1",
   "description": "Module to handle and work with Atlassian Stash projects and repositories throug REST API. Admin your repositories and projects in Stash easy. This project is not an Atlassian official project but use the Atlassian Stash REST API",
   "main": "./dist/index.js",

@@ -1,4 +1,4 @@
-import { Basic, EndpointService, Page, PageOptions, ProjectInput, ProjectOutput, CreateRepoInput, RepoOutput, ForkRepoInput, UpdateRepoInput, ListBranchesOptions, BranchOutput, RepoBrowseOptions, RepoChangesOptions, RepoChangesOutput, CommitOptions, CommitOutput, CommitChangesOptions, CommitCommentInput, CommitCommentOutput, CommitCommentOptions, CommitDiffOptions, CommitDiffOutput, CompareChangesOptions, CompareCommitsOptions, CompareDiffOptions, RepoDiffOptions, RepoFileOptions, PermissionUserOutput, PermissionGroupOutput, PermissionUsersOutput, RepoPullRequestOptions, PullRequestOutput, PullRequestInput, PullRequestActivitiesOptions, PullRequestActivitiesOutput, Participant, PullRequestDiffOptions, TaskOutput, TaskCountOutput, HookOutput, HookInput, TagsOptions, TagOutput, PermissionGroupsOutput, PermitedOutput } from "../types";
+import { Basic, EndpointService, Page, PageOptions, ProjectInput, Project, CreateRepoInput, RepoOutput, ForkRepoInput, UpdateRepoInput, ListBranchesOptions, BranchOutput, RepoBrowseOptions, RepoChangesOptions, RepoChangesOutput, CommitOptions, CommitOutput, CommitChangesOptions, CommitCommentInput, CommitCommentOutput, CommitCommentOptions, CommitDiffOptions, CommitDiffOutput, CompareChangesOptions, CompareCommitsOptions, CompareDiffOptions, RepoDiffOptions, RepoFileOptions, PermissionUserOutput, Group, PermissionUsersOutput, RepoPullRequestOptions, PullRequestOutput, PullRequestInput, PullRequestActivitiesOptions, PullRequestActivitiesOutput, Participant, PullRequestDiffOptions, TaskOutput, TaskCountOutput, HookOutput, HookInput, TagsOptions, TagOutput, PermissionGroups, PermitedOutput } from "../types";
 
 class ProjectInputImp {
 
@@ -1435,9 +1435,9 @@ export class ProjectRepoPermissionsGroupsEndpoint extends EndpointService {
      * Retrieve a page of groups that have no granted permissions for the specified repository.
      * @param {string} [filter] If specified only group names containing the supplied string will be returned
      * @param {PageOptions} [pageOptions] Page options to paginate results (or obtain more results per page)
-     * @returns {Promise<Page<PermissionGroupOutput>>} Promise with the requested page data.
+     * @returns {Promise<Page<Group>>} Promise with the requested page data.
      */
-    async none(filter?: string, pageOptions?: PageOptions): Promise<Page<PermissionGroupOutput>> {
+    async none(filter?: string, pageOptions?: PageOptions): Promise<Page<Group>> {
         const request = this.doGet({
             param: 'none',
             pageOptions: pageOptions,
@@ -1447,7 +1447,7 @@ export class ProjectRepoPermissionsGroupsEndpoint extends EndpointService {
                 request.addQueryParam('filter', filter);
             }
             const result = await request.execute();
-            return result.data as Page<PermissionGroupOutput>;
+            return result.data as Page<Group>;
         } catch (error) {
             throw error;
         }
@@ -1457,9 +1457,9 @@ export class ProjectRepoPermissionsGroupsEndpoint extends EndpointService {
      * Retrieve a page of groups that have been granted at least one permission for the specified repository
      * @param {string} [filter] If specified only group names containing the supplied string will be returned 
      * @param {PageOptions} [pageOptions] Page options to paginate results (or obtain more results per page)
-     * @returns {Promise<Page<PermissionGroupsOutput>>} Promise with the requested page data.
+     * @returns {Promise<Page<PermissionGroups>>} Promise with the requested page data.
      */
-    async list(filter?: string, pageOptions?: PageOptions): Promise<Page<PermissionGroupsOutput>> {
+    async list(filter?: string, pageOptions?: PageOptions): Promise<Page<PermissionGroups>> {
         const request = this.doGet({
             pageOptions: pageOptions,
         });
@@ -1468,7 +1468,7 @@ export class ProjectRepoPermissionsGroupsEndpoint extends EndpointService {
                 request.addQueryParam('filter', filter);
             }
             const result = await request.execute();
-            return result.data as Page<PermissionGroupsOutput>;
+            return result.data as Page<PermissionGroups>;
         } catch (error) {
             throw error;
         }
@@ -2210,9 +2210,9 @@ export class ProjectPermissionsGroupsEndpoint extends EndpointService {
      * Retrieve a page of groups that have no granted permissions for the specified project
      * @param {string} [filter] If specified only group names containing the supplied string will be returned
      * @param {PageOptions} [pageOptions] Page options to paginate results (or obtain more results per page)
-     * @returns {Promise<Page<PermissionGroupOutput>>} Promise with the requested page data.
+     * @returns {Promise<Page<Group>>} Promise with the requested page data.
      */
-     async none(filter?: string, pageOptions?: PageOptions): Promise<Page<PermissionGroupOutput>> {
+     async none(filter?: string, pageOptions?: PageOptions): Promise<Page<Group>> {
         const request = this.doGet({
             param: 'none',
             pageOptions: pageOptions,
@@ -2222,7 +2222,7 @@ export class ProjectPermissionsGroupsEndpoint extends EndpointService {
                 request.addQueryParam('filter', filter);
             }
             const result = await request.execute();
-            return result.data as Page<PermissionGroupOutput>;
+            return result.data as Page<Group>;
         } catch (error) {
             throw error;
         }
@@ -2232,9 +2232,9 @@ export class ProjectPermissionsGroupsEndpoint extends EndpointService {
      * Retrieve a page of groups that have been granted at least one permission for the specified project. 
      * @param {string} [filter] If specified only group names containing the supplied string will be returned 
      * @param {PageOptions} [pageOptions] Page options to paginate results (or obtain more results per page)
-     * @returns {Promise<Page<PermissionGroupsOutput>>} Promise with the requested page data.
+     * @returns {Promise<Page<PermissionGroups>>} Promise with the requested page data.
      */
-    async list(filter?: string, pageOptions?: PageOptions): Promise<Page<PermissionGroupsOutput>> {
+    async list(filter?: string, pageOptions?: PageOptions): Promise<Page<PermissionGroups>> {
         const request = this.doGet({
             pageOptions: pageOptions,
         });
@@ -2243,7 +2243,7 @@ export class ProjectPermissionsGroupsEndpoint extends EndpointService {
                 request.addQueryParam('filter', filter);
             }
             const result = await request.execute();
-            return result.data as Page<PermissionGroupsOutput>;
+            return result.data as Page<PermissionGroups>;
         } catch (error) {
             throw error;
         }
@@ -2351,6 +2351,21 @@ export class ProjectAvatarEndpoint extends EndpointService {
         }
     }
 
+    /**
+     * Get the project avatar image
+     * @param {number} fileName The filename to upload
+     * @returns {Promise<void>} If not throw errors, operation finish successfuly
+     */
+     async update(fileName: string): Promise<void> {
+        const request = this.doPost().asFile().withBody(fileName);
+        try {
+            const result = await request.execute();
+            return result.data;
+        } catch (error) {
+            throw error;
+        }
+    }
+
 }
 
 /**
@@ -2399,16 +2414,24 @@ export class ProjectsEndpoint extends EndpointService {
 
     /**
      * List all projets from Stash. The results are paginated. You can use the pagination options you need to get the desired results. 
+     * @param {string} [name] Search projects by name
+     * @param {string} [permissiom] Search projects by permission
      * @param {PageOptions} [pageOptions] Page options to paginate results (or obtain more results per page)
-     * @returns {Promise<Page<ProjectOutput>>} Promise with the requested page data.
+     * @returns {Promise<Page<Project>>} Promise with the requested page data.
      */
-    async list(pageOptions?: PageOptions): Promise<Page<ProjectOutput>> {
+    async list(name?: string, permission?: string, pageOptions?: PageOptions): Promise<Page<Project>> {
         const request = this.doGet({
             pageOptions: pageOptions,
         });
         try {
+            if(name){
+                request.addQueryParam('name', name);
+            }
+            if(permission){
+                request.addQueryParam('permission', permission);
+            }
             const result = await request.execute();
-            return result.data as Page<ProjectOutput>;
+            return result.data as Page<Project>;
         } catch (error) {
             throw error;
         }
@@ -2417,13 +2440,13 @@ export class ProjectsEndpoint extends EndpointService {
     /**
      * Create new projects into Stash.
      * @param {ProjectInput} projectOptions Project data to create it
-     * @returns {Promise<ProjectOutput>} Promise with the Created project data
+     * @returns {Promise<Project>} Promise with the Created project data
      */
-    async create(projectOptions: ProjectInput): Promise<ProjectOutput> {
+    async create(projectOptions: ProjectInput): Promise<Project> {
         const request = this.doPost().asJson().withBody(new ProjectInputImp(projectOptions));
         try {
             const result = await request.execute();
-            return result.data as ProjectOutput;
+            return result.data as Project;
         } catch (error) {
             throw error;
         }
@@ -2432,15 +2455,15 @@ export class ProjectsEndpoint extends EndpointService {
     /**
      * Get a specific project from Stash.
      * @param {string} projectKey Project key to get it
-     * @returns {Promise<ProjectOutput>} Promise with the requested project data
+     * @returns {Promise<Project>} Promise with the requested project data
      */
-    async get(projectKey: string): Promise<ProjectOutput> {
+    async get(projectKey: string): Promise<Project> {
         const request = this.doGet({
             param: projectKey,
         }).asJson();
         try {
             const result = await request.execute();
-            return result.data as ProjectOutput;
+            return result.data as Project;
         } catch (error) {
             throw error;
         }
@@ -2450,15 +2473,15 @@ export class ProjectsEndpoint extends EndpointService {
      * Update a specific project from Stash.
      * @param {string} projectKey Project key to update
      * @param {ProjectInput} projectOptions Project data to update
-     * @returns {Promise<ProjectOutput>} Promise with the updated project data
+     * @returns {Promise<Project>} Promise with the updated project data
      */
-    async update(projectKey: string, projectOptions: ProjectInput): Promise<ProjectOutput> {
+    async update(projectKey: string, projectOptions: ProjectInput): Promise<Project> {
         const request = this.doPost({
             param: projectKey
         }).asJson().withBody(new ProjectInputImp(projectOptions));
         try {
             const result = await request.execute();
-            return result.data as ProjectOutput;
+            return result.data as Project;
         } catch (error) {
             throw error;
         }
