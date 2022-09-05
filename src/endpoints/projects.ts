@@ -1,4 +1,4 @@
-import { Basic, EndpointService, Page, PageOptions, ProjectInput, Project, CreateRepoInput, RepoOutput, ForkRepoInput, UpdateRepoInput, ListBranchesOptions, BranchOutput, RepoBrowseOptions, RepoChangesOptions, RepoChangesOutput, CommitOptions, CommitOutput, CommitChangesOptions, CommitCommentInput, CommitCommentOutput, CommitCommentOptions, CommitDiffOptions, CommitDiffOutput, CompareChangesOptions, CompareCommitsOptions, CompareDiffOptions, RepoDiffOptions, RepoFileOptions, PermissionUserOutput, Group, PermissionUsersOutput, RepoPullRequestOptions, PullRequestOutput, PullRequestInput, PullRequestActivitiesOptions, PullRequestActivitiesOutput, Participant, PullRequestDiffOptions, TaskOutput, TaskCountOutput, HookOutput, HookInput, TagsOptions, TagOutput, PermissionGroups, PermitedOutput } from "../types";
+import { Basic, EndpointService, Page, PageOptions, ProjectInput, Project, CreateRepoInput, Repository, ForkRepoInput, UpdateRepoInput, ListBranchesOptions, Branch, RepoBrowseOptions, RepoChangesOptions, RepoChangesOutput, CommitOptions, Commit, CommitChangesOptions, CommentInput, Comment, CommentOptions, CommitDiffOptions, CommitDiffOutput, CompareChangesOptions, CompareCommitsOptions, CompareDiffOptions, RepoDiffOptions, RepoFileOptions, PermissionUserOutput, Group, PermissionUsersOutput, RepoPullRequestOptions, PullRequest, PullRequestInput, PullRequestActivityOptions, PullRequestActivity, Participant, PullRequestDiffOptions, Task, TaskCountOutput, HookOutput, HookInput, TagsOptions, TagOutput, PermissionGroups, PermitedOutput, Line, PullRequestUpdateInput, ParticipantInput } from "../types";
 
 class ProjectInputImp {
 
@@ -305,16 +305,16 @@ export class ProjectRepoPullRequestsEndpoint extends EndpointService {
     /**
      * Retrieve a page of pull requests to or from the specified repository. 
      * @param {RepoPullRequestOptions} [pullRequestOptions] Pull Request options include the pagination options. - pageOptions: Page options to paginate results (or obtain more results per page)
-     * @returns {Promise<Page<PullRequestOutput>>} Promise with the requested page data.
+     * @returns {Promise<Page<PullRequest>>} Promise with the requested page data.
      */
-    async list(pullRequestOptions?: RepoPullRequestOptions): Promise<Page<PullRequestOutput>> {
+    async list(pullRequestOptions?: RepoPullRequestOptions): Promise<Page<PullRequest>> {
         const request = this.doGet({
             pageOptions: pullRequestOptions?.pageOptions,
         });
         try {
             this.processOptions(request, pullRequestOptions);
             const result = await request.execute();
-            return result.data as Page<PullRequestOutput>;
+            return result.data as Page<PullRequest>;
         } catch (error) {
             throw error;
         }
@@ -323,13 +323,13 @@ export class ProjectRepoPullRequestsEndpoint extends EndpointService {
     /**
      * Create a new pull request between two branches. The branches may be in the same repository, or different ones. When using different repositories, they must still be in the same hierarchy 
      * @param {PullRequestInput} [pullRequestInput] Pull Request data to create it
-     * @returns {Promise<PullRequestOutput>} Promise with the created pull request data.
+     * @returns {Promise<PullRequest>} Promise with the created pull request data.
      */
-    async create(pullRequestInput: PullRequestInput): Promise<PullRequestOutput> {
+    async create(pullRequestInput: PullRequestInput): Promise<PullRequest> {
         const request = this.doPost().asJson().withBody(pullRequestInput);
         try {
             const result = await request.execute();
-            return result.data as PullRequestOutput;
+            return result.data as PullRequest;
         } catch (error) {
             throw error;
         }
@@ -338,15 +338,15 @@ export class ProjectRepoPullRequestsEndpoint extends EndpointService {
     /**
      * Retrieve a pull request
      * @param {number} [pullRequestId] Pull Request id to get it
-     * @returns {Promise<PullRequestOutput>} Promise with the requested pull request data.
+     * @returns {Promise<PullRequest>} Promise with the requested pull request data.
      */
-    async get(pullRequestId: number): Promise<PullRequestOutput> {
+    async get(pullRequestId: number): Promise<PullRequest> {
         const request = this.doGet({
             param: pullRequestId
         });
         try {
             const result = await request.execute();
-            return result.data as PullRequestOutput;
+            return result.data as PullRequest;
         } catch (error) {
             throw error;
         }
@@ -356,15 +356,15 @@ export class ProjectRepoPullRequestsEndpoint extends EndpointService {
      * Update the title, description, reviewers or destination branch of an existing pull request
      * @param {number} [pullRequestId] Pull Request id to update it
      * @param {PullRequestInput} [pullRequestInput] Pull Request data to update it
-     * @returns {Promise<PullRequestOutput>} Promise with the updated pull request data.
+     * @returns {Promise<PullRequest>} Promise with the updated pull request data.
      */
-    async update(pullRequestId: number, pullRequestInput: PullRequestInput): Promise<PullRequestOutput> {
+    async update(pullRequestId: number, pullRequestInput: PullRequestUpdateInput): Promise<PullRequest> {
         const request = this.doPut({
             param: pullRequestId
         }).asJson().withBody(pullRequestInput);
         try {
             const result = await request.execute();
-            return result.data as PullRequestOutput;
+            return result.data as PullRequest;
         } catch (error) {
             throw error;
         }
@@ -382,17 +382,17 @@ export class ProjectRepoPullRequestsActivitiesEndpoint extends EndpointService {
 
     /**
      * Retrieve a page of activity associated with a pull request. Activity items include comments, approvals, rescopes (i.e. adding and removing of commits), merges and more
-     * @param {PullRequestActivitiesOptions} activitiesOptions Pull Request Activities options include the pagination options. - pageOptions: Page options to paginate results (or obtain more results per page)
-     * @returns {Promise<Page<PullRequestActivitiesOutput>>} Promise with the requested page data.
+     * @param {PullRequestActivityOptions} activitiesOptions Pull Request Activities options include the pagination options. - pageOptions: Page options to paginate results (or obtain more results per page)
+     * @returns {Promise<Page<PullRequestActivity>>} Promise with the requested page data.
      */
-    async list(activitiesOptions: PullRequestActivitiesOptions): Promise<Page<PullRequestActivitiesOutput>> {
+    async list(activitiesOptions: PullRequestActivityOptions): Promise<Page<PullRequestActivity>> {
         const request = this.doGet({
             pageOptions: activitiesOptions.pageOptions,
         });
         try {
             this.processOptions(request, activitiesOptions);
             const result = await request.execute();
-            return result.data as Page<PullRequestActivitiesOutput>;
+            return result.data as Page<PullRequestActivity>;
         } catch (error) {
             throw error;
         }
@@ -438,13 +438,13 @@ export class ProjectRepoPullRequestsMergeEndpoint extends EndpointService {
 
     /**
      * Test whether a pull request can be merged
-     * @returns {Promise<PullRequestOutput>} Return the pull request data and mergin status.
+     * @returns {Promise<PullRequest>} Return the pull request data and mergin status.
      */
-    async test(): Promise<PullRequestOutput> {
+    async test(): Promise<PullRequest> {
         const request = this.doGet();
         try {
             const result = await request.execute();
-            return result.data as PullRequestOutput;
+            return result.data as PullRequest;
         } catch (error) {
             throw error;
         }
@@ -452,13 +452,17 @@ export class ProjectRepoPullRequestsMergeEndpoint extends EndpointService {
 
     /**
      * Merge the specified pull request
-     * @returns {Promise<PullRequestOutput>} Return the merged pull request data.
+     * @param {number} [version] The current version of the pull request. If the server's version isn't the same as the specified version the operation will fail. To determine the current version of the pull request it should be fetched from the server prior to this operation. Look for the 'version' attribute in the returned JSON structure.
+     * @returns {Promise<PullRequest>} Return the merged pull request data.
      */
-    async execute() {
+    async execute(version?: number) {
         const request = this.doPost();
         try {
+            if (version !== undefined) {
+                request.addQueryParam('version', version);
+            }
             const result = await request.execute();
-            return result.data as PullRequestOutput;
+            return result.data as PullRequest;
         } catch (error) {
             throw error;
         }
@@ -575,16 +579,16 @@ export class ProjectRepoPullRequestsCommentsEndpoint extends EndpointService {
      * Retrieve a page of comments made in a specified pull request
      * @param {string} [filePath] File path
      * @param {PageOptions} [pageOptions] Page options to paginate results (or obtain more results per page)
-     * @returns {Promise<Page<CommitCommentOutput>>} Promise with the requested page data.
+     * @returns {Promise<Page<Comment>>} Promise with the requested page data.
      */
-    async list(filePath?: string, pageOptions?: PageOptions): Promise<Page<CommitCommentOutput>> {
+    async list(filePath?: string, pageOptions?: PageOptions): Promise<Page<Comment>> {
         const request = this.doGet({
             param: filePath ? encodeURIComponent(filePath) : undefined,
             pageOptions: pageOptions,
         });
         try {
             const result = await request.execute();
-            return result.data as Page<CommitCommentOutput>;
+            return result.data as Page<Comment>;
         } catch (error) {
             throw error;
         }
@@ -592,14 +596,14 @@ export class ProjectRepoPullRequestsCommentsEndpoint extends EndpointService {
 
     /**
      * Add a new comment
-     * @param {CommitCommentInput} commentInput Comment input data to create new comment
-     * @returns {Promise<CommitCommentOutput>} Promise with the created comment data.
+     * @param {CommentInput} commentInput Comment input data to create new comment
+     * @returns {Promise<Comment>} Promise with the created comment data.
      */
-    async create(commentInput: CommitCommentInput): Promise<CommitCommentOutput> {
+    async create(commentInput: CommentInput): Promise<Comment> {
         const request = this.doPost().asJson().withBody(commentInput);
         try {
             const result = await request.execute();
-            return result.data as CommitCommentOutput;
+            return result.data as Comment;
         } catch (error) {
             throw error;
         }
@@ -608,15 +612,15 @@ export class ProjectRepoPullRequestsCommentsEndpoint extends EndpointService {
     /**
      * Get specific comment
      * @param {number} commentId Comment Id get comment data
-     * @returns {Promise<CommitCommentOutput>} Promise with the requested comment data.
+     * @returns {Promise<Comment>} Promise with the requested comment data.
      */
-    async get(commentId: number): Promise<CommitCommentOutput> {
+    async get(commentId: number): Promise<Comment> {
         const request = this.doGet({
             param: commentId
         }).asJson();
         try {
             const result = await request.execute();
-            return result.data as CommitCommentOutput;
+            return result.data as Comment;
         } catch (error) {
             throw error;
         }
@@ -625,16 +629,20 @@ export class ProjectRepoPullRequestsCommentsEndpoint extends EndpointService {
     /**
      * Update specific comment
      * @param {number} commentId Comment Id get comment data
-     * @param {CommitCommentInput} commentInput Comment input data to update the comment
-     * @returns {Promise<CommitCommentOutput>} Promise with the requested comment data.
+     * @param {string} text The comment text to update
+     * @param {string} version The version of the comment to update. A version that must match the server's version of the comment or the update will fail
+     * @returns {Promise<Comment>} Promise with the requested comment data.
      */
-    async update(commentId: number, commentInput: CommitCommentInput): Promise<CommitCommentOutput> {
+    async update(commentId: number, text: string, version: number): Promise<Comment> {
         const request = this.doPut({
             param: commentId
-        }).asJson().withBody(commentInput);
+        }).asJson().withBody({
+            version: version,
+            text: text,
+        });
         try {
             const result = await request.execute();
-            return result.data as CommitCommentOutput;
+            return result.data as Comment;
         } catch (error) {
             throw error;
         }
@@ -675,9 +683,9 @@ export class ProjectRepoPullRequestsCommitsEndpoint extends EndpointService {
      * Retrieve changesets for the specified pull request
      * @param {boolean} [withComments] if set to true, the service will add "authorCount" and "totalCount" at the end of the page. "authorCount" is the number of different authors and "totalCount" is the total number of changesets
      * @param {PageOptions} [pageOptions] Page options to paginate results (or obtain more results per page)
-     * @returns {Promise<Page<CommitOutput>>} Promise with the requested page data.
+     * @returns {Promise<Page<Commit>>} Promise with the requested page data.
      */
-    async list(withComments?: boolean, pageOptions?: PageOptions): Promise<Page<CommitOutput>> {
+    async list(withComments?: boolean, pageOptions?: PageOptions): Promise<Page<Commit>> {
         const request = this.doGet({
             pageOptions: pageOptions,
         });
@@ -686,34 +694,11 @@ export class ProjectRepoPullRequestsCommitsEndpoint extends EndpointService {
                 request.addQueryParam('withComments', withComments);
             }
             const result = await request.execute();
-            return result.data as Page<CommitOutput>;
+            return result.data as Page<Commit>;
         } catch (error) {
             throw error;
         }
     }
-
-    /**
-     * Retrieve a single commit identified by its ID>. In general, that ID is a SHA1. 
-     * From 2.11, ref names like "refs/heads/master" are no longer accepted by this resource.
-     * @param {string} commitId Commit Id to retrieve data from
-     * @param {string} [path] an optional path to filter the commit by. If supplied the details returned may not be for the specified commit. Instead, starting from the specified commit, they will be the details for the first commit affecting the specified path.
-     * @returns {Promise<CommitOutput>} Promise with the requested commit data
-     */
-    async get(commitId: string, path?: string): Promise<CommitOutput> {
-        const request = this.doGet({
-            param: commitId,
-        });
-        try {
-            if (path) {
-                request.addQueryParam('path', path);
-            }
-            const result = await request.execute();
-            return result.data as CommitOutput;
-        } catch (error) {
-            throw error;
-        }
-    }
-
 }
 
 /**
@@ -773,10 +758,10 @@ export class ProjectRepoPullRequestParticipantEndpoint extends EndpointService {
 
     /**
      * Assigns a participant to an explicit role in pull request. Currently only the REVIEWER role may be assigned. 
-     * @param {PageOptions} [pageOptions] Page options to paginate results (or obtain more results per page)
+     * @param {ParticipantInput} participantInput The participant data to assign
      * @returns {Promise<Participant>} Promise with the requested page data.
      */
-    async assign(participantInput: Participant): Promise<Participant> {
+    async assign(participantInput: ParticipantInput): Promise<Participant> {
         const request = this.doPost().asJson().withBody(participantInput);
         try {
             const result = await request.execute();
@@ -815,15 +800,15 @@ export class ProjectRepoPullRequestTasksEndpoint extends EndpointService {
     /**
      * Retrieve the tasks associated with a pull request
      * @param {PageOptions} [pageOptions] Page options to paginate results (or obtain more results per page)
-     * @returns {Promise<Page<TaskOutput>>} Promise with the requested page data.
+     * @returns {Promise<Page<Task>>} Promise with the requested page data.
      */
-    async list(pageOptions?: PageOptions): Promise<Page<TaskOutput>> {
+    async list(pageOptions?: PageOptions): Promise<Page<Task>> {
         const request = this.doGet({
             pageOptions: pageOptions,
         });
         try {
             const result = await request.execute();
-            return result.data as Page<TaskOutput>;
+            return result.data as Page<Task>;
         } catch (error) {
             throw error;
         }
@@ -943,16 +928,16 @@ export class ProjectRepoCommitsEndpoint extends EndpointService {
      * Commits may be identified by branch or tag name or by ID. 
      * A path may be supplied to restrict the returned commits to only those which affect that path
      * @param {CommitOptions} [commitOptions] Commits options include the pagination options. - pageOptions: Page options to paginate results (or obtain more results per page)
-     * @returns {Promise<Page<CommitOutput>>} Promise with the requested page data.
+     * @returns {Promise<Page<Commit>>} Promise with the requested page data.
      */
-    async list(commitOptions?: CommitOptions): Promise<Page<CommitOutput>> {
+    async list(commitOptions?: CommitOptions): Promise<Page<Commit>> {
         const request = this.doGet({
             pageOptions: commitOptions?.pageOptions,
         });
         try {
             this.processOptions(request, commitOptions);
             const result = await request.execute();
-            return result.data as Page<CommitOutput>;
+            return result.data as Page<Commit>;
         } catch (error) {
             throw error;
         }
@@ -963,9 +948,9 @@ export class ProjectRepoCommitsEndpoint extends EndpointService {
      * From 2.11, ref names like "refs/heads/master" are no longer accepted by this resource.
      * @param {string} commitId Commit Id to retrieve data from
      * @param {string} [path] an optional path to filter the commit by. If supplied the details returned may not be for the specified commit. Instead, starting from the specified commit, they will be the details for the first commit affecting the specified path.
-     * @returns {Promise<CommitOutput>} Promise with the requested commit data
+     * @returns {Promise<Commit>} Promise with the requested commit data
      */
-    async get(commitId: string, path?: string): Promise<CommitOutput> {
+    async get(commitId: string, path?: string): Promise<Commit> {
         const request = this.doGet({
             param: commitId,
         });
@@ -974,7 +959,7 @@ export class ProjectRepoCommitsEndpoint extends EndpointService {
                 request.addQueryParam('path', path);
             }
             const result = await request.execute();
-            return result.data as CommitOutput;
+            return result.data as Commit;
         } catch (error) {
             throw error;
         }
@@ -1021,17 +1006,17 @@ export class ProjectRepoCommitCommentsEndpoint extends EndpointService {
 
     /**
      * Retrieve a page of comments made in a specified commit
-     * @param {CommitCommentOptions} [commentOptions] Commit Comment options include the pagination options. - pageOptions: Page options to paginate results (or obtain more results per page)
-     * @returns {Promise<Page<CommitCommentOutput>>} Promise with the requested page data.
+     * @param {CommentOptions} [commentOptions] Commit Comment options include the pagination options. - pageOptions: Page options to paginate results (or obtain more results per page)
+     * @returns {Promise<Page<Comment>>} Promise with the requested page data.
      */
-    async list(commentOptions?: CommitCommentOptions): Promise<Page<CommitCommentOutput>> {
+    async list(commentOptions?: CommentOptions): Promise<Page<Comment>> {
         const request = this.doGet({
             pageOptions: commentOptions?.pageOptions,
         });
         try {
             this.processOptions(request, commentOptions);
             const result = await request.execute();
-            return result.data as Page<CommitCommentOutput>;
+            return result.data as Page<Comment>;
         } catch (error) {
             throw error;
         }
@@ -1039,14 +1024,14 @@ export class ProjectRepoCommitCommentsEndpoint extends EndpointService {
 
     /**
      * Add a new comment
-     * @param {CommitCommentInput} commentInput Comment input data to create new comment
-     * @returns {Promise<CommitCommentOutput>} Promise with the created comment data.
+     * @param {CommentInput} commentInput Comment input data to create new comment
+     * @returns {Promise<Comment>} Promise with the created comment data.
      */
-    async create(commentInput: CommitCommentInput): Promise<CommitCommentOutput> {
+    async create(commentInput: CommentInput): Promise<Comment> {
         const request = this.doPost().asJson().withBody(commentInput);
         try {
             const result = await request.execute();
-            return result.data as CommitCommentOutput;
+            return result.data as Comment;
         } catch (error) {
             throw error;
         }
@@ -1055,15 +1040,15 @@ export class ProjectRepoCommitCommentsEndpoint extends EndpointService {
     /**
      * Get specific comment
      * @param {number} commentId Comment Id get comment data
-     * @returns {Promise<CommitCommentOutput>} Promise with the requested comment data.
+     * @returns {Promise<Comment>} Promise with the requested comment data.
      */
-    async get(commentId: number): Promise<CommitCommentOutput> {
+    async get(commentId: number): Promise<Comment> {
         const request = this.doGet({
             param: commentId
         }).asJson();
         try {
             const result = await request.execute();
-            return result.data as CommitCommentOutput;
+            return result.data as Comment;
         } catch (error) {
             throw error;
         }
@@ -1072,16 +1057,20 @@ export class ProjectRepoCommitCommentsEndpoint extends EndpointService {
     /**
      * Update specific comment
      * @param {number} commentId Comment Id get comment data
-     * @param {CommitCommentInput} commentInput Comment input data to update the comment
-     * @returns {Promise<CommitCommentOutput>} Promise with the requested comment data.
+     * @param {string} text The comment text to update
+     * @param {string} version The version of the comment to update. A version that must match the server's version of the comment or the update will fail
+     * @returns {Promise<Comment>} Promise with the requested comment data.
      */
-    async update(commentId: number, commentInput: CommitCommentInput): Promise<CommitCommentOutput> {
+    async update(commentId: number, text: string, version: number): Promise<Comment> {
         const request = this.doPut({
             param: commentId
-        }).asJson().withBody(commentInput);
+        }).asJson().withBody({
+            version: version,
+            text: text,
+        });
         try {
             const result = await request.execute();
-            return result.data as CommitCommentOutput;
+            return result.data as Comment;
         } catch (error) {
             throw error;
         }
@@ -1257,16 +1246,16 @@ export class ProjectRepoCompareCommitsEndpoint extends EndpointService {
     /**
      * Gets the commits accessible from the  "from" changeset but not in the "to" changeset. .
      * @param {CompareCommitsOptions} [compareCommitsOptions] Compare Commits options include the pagination options. - pageOptions: Page options to paginate results (or obtain more results per page)
-     * @returns {Promise<Page<CommitOutput>>} Promise with the requested page data.
+     * @returns {Promise<Page<Commit>>} Promise with the requested page data.
      */
-    async list(compareCommitsOptions?: CompareCommitsOptions): Promise<Page<CommitOutput>> {
+    async list(compareCommitsOptions?: CompareCommitsOptions): Promise<Page<Commit>> {
         const request = this.doGet({
             pageOptions: compareCommitsOptions?.pageOptions,
         });
         try {
             this.processOptions(request, compareCommitsOptions);
             const result = await request.execute();
-            return result.data as Page<CommitOutput>;
+            return result.data as Page<Commit>;
         } catch (error) {
             throw error;
         }
@@ -1641,9 +1630,9 @@ export class ProjectRepoBrowseEndpoint extends EndpointService {
      * Retrieve a page of content for a file path at a specified revision.
      * @param {RepoBrowseOptions} [browseOptions] Browse options include the pagination options. - pageOptions: Page options to paginate results (or obtain more results per page)
      * @param {string} [filePath] File path to retrieve content from
-     * @returns {Promise<Page<any>>} Promise with the requested page data with found lines.
+     * @returns {Promise<Page<Line>>} Promise with the requested page data with found lines.
      */
-    async list(browseOptions?: RepoBrowseOptions, filePath?: string): Promise<Page<any>> {
+    async list(browseOptions?: RepoBrowseOptions, filePath?: string): Promise<Page<Line>> {
         const request = this.doGet({
             param: filePath ? encodeURIComponent(filePath) : undefined,
             pageOptions: browseOptions?.pageOptions,
@@ -1651,7 +1640,15 @@ export class ProjectRepoBrowseEndpoint extends EndpointService {
         try {
             this.processOptions(request, browseOptions);
             const result = await request.execute();
-            return result.data as Page<any>;
+            const page = new Page();
+            page.filter = result.data.filter;
+            page.isLastPage = result.data.isLastPage;
+            page.limit = result.data.limit;
+            page.nextPageStart = result.data.nextPageStart;
+            page.size = result.data.size;
+            page.start = result.data.start;
+            page.values = result.data.lines as Line[];
+            return page as Page<Line>;
         } catch (error) {
             throw error;
         }
@@ -1671,15 +1668,15 @@ export class ProjectRepoForksEndpoint extends EndpointService {
     /**
      * List all forks from a specific repository. The results are paginated. You can use the pagination options you need to get the desired results. 
      * @param {PageOptions} [pageOptions] Page options to paginate results (or obtain more results per page)
-     * @returns {Promise<Page<RepoOutput>>} Promise with the requested page data.
+     * @returns {Promise<Page<Repository>>} Promise with the requested page data.
      */
-    async list(pageOptions?: PageOptions): Promise<Page<RepoOutput>> {
+    async list(pageOptions?: PageOptions): Promise<Page<Repository>> {
         const request = this.doGet({
             pageOptions: pageOptions,
         });
         try {
             const result = await request.execute();
-            return result.data as Page<RepoOutput>;
+            return result.data as Page<Repository>;
         } catch (error) {
             throw error;
         }
@@ -1700,13 +1697,13 @@ export class ProjectRepoRecreateEndpoint extends EndpointService {
      * If a create or fork operation fails, calling this method will clean up the broken repository and try again. 
      * The repository must be in an INITIALISATION_FAILED state.
      * @param {PageOptions} [pageOptions] Page options to paginate results (or obtain more results per page)
-     * @returns {Promise<RepoOutput>} Promise with the recreated Reposiitory data.
+     * @returns {Promise<Repository>} Promise with the recreated Reposiitory data.
      */
-    async rebuild(): Promise<RepoOutput> {
+    async rebuild(): Promise<Repository> {
         const request = this.doPost();
         try {
             const result = await request.execute();
-            return result.data as RepoOutput;
+            return result.data as Repository;
         } catch (error) {
             throw error;
         }
@@ -1726,15 +1723,15 @@ export class ProjectRepoRelatedEndpoint extends EndpointService {
     /**
      * Retrieve repositories which are related to this one.
      * @param {PageOptions} [pageOptions] Page options to paginate results (or obtain more results per page)
-     * @returns {Promise<Page<RepoOutput>>} Promise with the requested page data.
+     * @returns {Promise<Page<Repository>>} Promise with the requested page data.
      */
-    async list(pageOptions?: PageOptions): Promise<Page<RepoOutput>> {
+    async list(pageOptions?: PageOptions): Promise<Page<Repository>> {
         const request = this.doGet({
             pageOptions: pageOptions,
         });
         try {
             const result = await request.execute();
-            return result.data as Page<RepoOutput>;
+            return result.data as Page<Repository>;
         } catch (error) {
             throw error;
         }
@@ -1764,16 +1761,16 @@ export class ProjectRepoBranchesEndpoint extends EndpointService {
     /**
      * Retrieve the branches matching the supplied filterText param. 
      * @param {ListBranchesOptions} [listOptions] List Branches options including the paginations options. - pageOptions: Page options to paginate results (or obtain more results per page)
-     * @returns {Promise<Page<BranchOutput>>} Promise with the requested page data.
+     * @returns {Promise<Page<Branch>>} Promise with the requested page data.
      */
-    async list(listOptions?: ListBranchesOptions): Promise<Page<BranchOutput>> {
+    async list(listOptions?: ListBranchesOptions): Promise<Page<Branch>> {
         const request = this.doGet({
             pageOptions: listOptions?.pageOptions,
         });
         try {
             this.processOptions(request, listOptions);
             const result = await request.execute();
-            return result.data as Page<BranchOutput>;
+            return result.data as Page<Branch>;
         } catch (error) {
             throw error;
         }
@@ -1792,13 +1789,13 @@ export class ProjectRepoBranchesDefaultEndpoint extends EndpointService {
 
     /**
      * Get the default branch of the repository. 
-     * @returns {BranchOutput} Promise with the default branch data.
+     * @returns {Branch} Promise with the default branch data.
      */
-    async get(): Promise<BranchOutput> {
+    async get(): Promise<Branch> {
         const request = this.doGet();
         try {
             const result = await request.execute();
-            return result.data as BranchOutput;
+            return result.data as Branch;
         } catch (error) {
             throw error;
         }
@@ -1965,15 +1962,15 @@ export class ProjectReposEndpoint extends EndpointService {
     /**
      * List all repositories from a specific project. The results are paginated. You can use the pagination options you need to get the desired results. 
      * @param {PageOptions} [pageOptions] Page options to paginate results (or obtain more results per page)
-     * @returns {Promise<Page<RepoOutput>>} Promise with the requested page data.
+     * @returns {Promise<Page<Repository>>} Promise with the requested page data.
      */
-    async list(pageOptions?: PageOptions): Promise<Page<RepoOutput>> {
+    async list(pageOptions?: PageOptions): Promise<Page<Repository>> {
         const request = this.doGet({
             pageOptions: pageOptions,
         });
         try {
             const result = await request.execute();
-            return result.data as Page<RepoOutput>;
+            return result.data as Page<Repository>;
         } catch (error) {
             throw error;
         }
@@ -1982,13 +1979,13 @@ export class ProjectReposEndpoint extends EndpointService {
     /**
      * Create new repository to a specific project.
      * @param {CreateRepoInput} repoOptions Repository data to create it
-     * @returns {Promise<RepoOutput>} Promise with the created Repository data
+     * @returns {Promise<Repository>} Promise with the created Repository data
      */
-    async create(repoOptions: CreateRepoInput): Promise<RepoOutput> {
+    async create(repoOptions: CreateRepoInput): Promise<Repository> {
         const request = this.doPost().asJson().withBody(repoOptions);
         try {
             const result = await request.execute();
-            return result.data as RepoOutput;
+            return result.data as Repository;
         } catch (error) {
             throw error;
         }
@@ -1997,15 +1994,15 @@ export class ProjectReposEndpoint extends EndpointService {
     /**
      * Get data from specific project repository.
      * @param {string} slug Repository slug
-     * @returns {Promise<RepoOutput>} Promise with the requested Repository data
+     * @returns {Promise<Repository>} Promise with the requested Repository data
      */
-    async get(slug: string): Promise<RepoOutput> {
+    async get(slug: string): Promise<Repository> {
         const request = this.doGet({
             param: slug,
         });
         try {
             const result = await request.execute();
-            return result.data as RepoOutput;
+            return result.data as Repository;
         } catch (error) {
             throw error;
         }
@@ -2015,15 +2012,15 @@ export class ProjectReposEndpoint extends EndpointService {
      * Fork a specific repository from the project to another project.
      * @param {string} fromSlug Origin Repository slug
      * @param {ForkRepoInput} repoOptions Repository Data to fork it
-     * @returns {Promise<RepoOutput>} Promise with the created Repository data
+     * @returns {Promise<Repository>} Promise with the created Repository data
      */
-    async fork(fromSlug: string, repoOptions: ForkRepoInput): Promise<RepoOutput> {
+    async fork(fromSlug: string, repoOptions: ForkRepoInput): Promise<Repository> {
         const request = this.doPost({
             param: fromSlug,
         }).withBody(repoOptions);
         try {
             const result = await request.execute();
-            return result.data as RepoOutput;
+            return result.data as Repository;
         } catch (error) {
             throw error;
         }
@@ -2033,15 +2030,15 @@ export class ProjectReposEndpoint extends EndpointService {
      * Update specific repository from the project
      * @param {string} slug Repository slug to update
      * @param {UpdateRepoInput} repoOptions Repository Data to update
-     * @returns {Promise<RepoOutput>} Promise with the updated Repository data
+     * @returns {Promise<Repository>} Promise with the updated Repository data
      */
-    async update(slug: string, repoOptions: UpdateRepoInput): Promise<RepoOutput> {
+    async update(slug: string, repoOptions: UpdateRepoInput): Promise<Repository> {
         const request = this.doPut({
             param: slug,
         }).withBody(repoOptions);
         try {
             const result = await request.execute();
-            return result.data as RepoOutput;
+            return result.data as Repository;
         } catch (error) {
             throw error;
         }
@@ -2050,7 +2047,7 @@ export class ProjectReposEndpoint extends EndpointService {
     /**
      * Delete specific repository from the project
      * @param {string} slug Repository slug to delete
-     * @returns {Promise<RepoOutput>} Promise with the deleted repository slug
+     * @returns {Promise<void>} Promise with the deleted repository slug
      */
     async delete(slug: string) {
         const request = this.doDelete({
@@ -2058,7 +2055,7 @@ export class ProjectReposEndpoint extends EndpointService {
         }).asJson();
         try {
             const result = await request.execute();
-            return result.data as string;
+            return;
         } catch (error) {
             throw error;
         }
@@ -2098,7 +2095,7 @@ export class ProjectPermissionsEndpoint extends EndpointService {
      * All paths and operations from '/rest/api/1.0/projects/{prokectKey}/permissions/{permission}/all'. 
      * @returns {ProjectPermissionsAllEndpoint} Get all operations about the project specific permissions
      */
-     all = (permission: string): ProjectPermissionsAllEndpoint => {
+    all = (permission: string): ProjectPermissionsAllEndpoint => {
         return new ProjectPermissionsAllEndpoint(this.auth, permission);
     };
 
@@ -2123,7 +2120,7 @@ export class ProjectPermissionsUsersEndpoint extends EndpointService {
      * @param {PageOptions} [pageOptions] Page options to paginate results (or obtain more results per page)
      * @returns {Promise<Page<PermissionUserOutput>>} Promise with the requested page data.
      */
-     async none(filter?: string, pageOptions?: PageOptions): Promise<Page<PermissionUserOutput>> {
+    async none(filter?: string, pageOptions?: PageOptions): Promise<Page<PermissionUserOutput>> {
         const request = this.doGet({
             param: 'none',
             pageOptions: pageOptions,
@@ -2145,7 +2142,7 @@ export class ProjectPermissionsUsersEndpoint extends EndpointService {
      * @param {PageOptions} [pageOptions] Page options to paginate results (or obtain more results per page)
      * @returns {Promise<Page<PermissionUsersOutput>>} Promise with the requested page data.
      */
-     async list(filter?: string, pageOptions?: PageOptions): Promise<Page<PermissionUsersOutput>> {
+    async list(filter?: string, pageOptions?: PageOptions): Promise<Page<PermissionUsersOutput>> {
         const request = this.doGet({
             pageOptions: pageOptions,
         });
@@ -2212,7 +2209,7 @@ export class ProjectPermissionsGroupsEndpoint extends EndpointService {
      * @param {PageOptions} [pageOptions] Page options to paginate results (or obtain more results per page)
      * @returns {Promise<Page<Group>>} Promise with the requested page data.
      */
-     async none(filter?: string, pageOptions?: PageOptions): Promise<Page<Group>> {
+    async none(filter?: string, pageOptions?: PageOptions): Promise<Page<Group>> {
         const request = this.doGet({
             param: 'none',
             pageOptions: pageOptions,
@@ -2288,7 +2285,7 @@ export class ProjectPermissionsGroupsEndpoint extends EndpointService {
 /**
  * Class to manage and expose all endpoits and operations below '/rest/api/1.0/projects/{prokectKey}/permissions/{permission}/all'
  */
- export class ProjectPermissionsAllEndpoint extends EndpointService {
+export class ProjectPermissionsAllEndpoint extends EndpointService {
 
     constructor(auth: Basic, permission: string) {
         super(auth, '/' + permission + '/all');
@@ -2298,7 +2295,7 @@ export class ProjectPermissionsGroupsEndpoint extends EndpointService {
      * Check whether the specified permission is the default permission (granted to all users) for a project.
      * @returns {Promise<PermitedOutput>} Promise with the permited result.
      */
-     async check(): Promise<PermitedOutput> {
+    async check(): Promise<PermitedOutput> {
         const request = this.doGet();
         try {
             const result = await request.execute();
@@ -2308,7 +2305,7 @@ export class ProjectPermissionsGroupsEndpoint extends EndpointService {
         }
     }
 
-    async update(allow: boolean): Promise<PermitedOutput>{
+    async update(allow: boolean): Promise<PermitedOutput> {
         const request = this.doPost();
         try {
             request.addQueryParam('allow', allow);
@@ -2339,7 +2336,7 @@ export class ProjectAvatarEndpoint extends EndpointService {
      */
     async get(size?: number): Promise<any> {
         const request = this.doGet();
-        
+
         try {
             if (size) {
                 request.addQueryParam('s', size);
@@ -2356,7 +2353,7 @@ export class ProjectAvatarEndpoint extends EndpointService {
      * @param {number} fileName The filename to upload
      * @returns {Promise<void>} If not throw errors, operation finish successfuly
      */
-     async update(fileName: string): Promise<void> {
+    async update(fileName: string): Promise<void> {
         const request = this.doPost().asFile().withBody(fileName);
         try {
             const result = await request.execute();
@@ -2424,10 +2421,10 @@ export class ProjectsEndpoint extends EndpointService {
             pageOptions: pageOptions,
         });
         try {
-            if(name){
+            if (name) {
                 request.addQueryParam('name', name);
             }
-            if(permission){
+            if (permission) {
                 request.addQueryParam('permission', permission);
             }
             const result = await request.execute();
@@ -2460,7 +2457,7 @@ export class ProjectsEndpoint extends EndpointService {
     async get(projectKey: string): Promise<Project> {
         const request = this.doGet({
             param: projectKey,
-        }).asJson();
+        });
         try {
             const result = await request.execute();
             return result.data as Project;

@@ -27,7 +27,7 @@ export class Basic {
 
     private processURL(url: string) {
         if (url.endsWith('/')) {
-            return url.substring(0, url.length - 2);
+            return url.substring(0, url.length - 1);
         }
         return url;
     }
@@ -155,10 +155,13 @@ export class Page<T> {
     limit: number = 0;
     isLastPage: boolean = true;
     values: T[] = [];
-    lines?: string[];
     start: number = 0;
     filter?: any;
     nextPageStart?: number = 0;
+}
+
+export interface Line {
+    text: string;
 }
 
 export class Avatar {
@@ -214,18 +217,18 @@ export interface UpdateRepoInput {
 }
 
 export interface ForkRepoInput {
-    slug: string;
-    name: string;
-    project: {
+    slug?: string;
+    name?: string;
+    project?: {
         key: string;
     };
 }
 
-export interface RepoOutput extends RestOutput {
+export interface Repository extends RestOutput {
     slug: string;
     id: string;
     name: string;
-    origin?: RepoOutput;
+    origin?: Repository;
     scmId: string;
     state: string;
     statusMessage: string;
@@ -243,7 +246,7 @@ export interface ListBranchesOptions {
     pageOptions?: PageOptions
 }
 
-export interface BranchOutput {
+export interface Branch {
     id: string;
     displayId: string;
     latestChangeset: string;
@@ -285,13 +288,13 @@ export interface CommitOptions {
     pageOptions?: PageOptions;
 }
 
-export interface CommitOutput extends RestOutput {
+export interface Commit extends RestOutput {
     id: string;
     displayId: string;
     author: User;
     authorTimestamp: number;
     message: string;
-    parents: CommitOutput[];
+    parents: Commit[];
     attributes: { [key: string]: string };
 }
 
@@ -316,16 +319,15 @@ export interface User {
     mutableGroups?: boolean;
 }
 
-export interface CommitCommentInput {
-    version: string;
+export interface CommentInput {
     text: string;
     parent?: {
         id: string;
     }
-    anchor?: CommitCommentAnchor;
+    anchor?: CommentAnchor;
 }
 
-export interface CommitCommentAnchor {
+export interface CommentAnchor {
     fromHash?: string;
     toHash?: string;
     line?: number;
@@ -336,7 +338,7 @@ export interface CommitCommentAnchor {
     orphaned?: boolean;
 }
 
-export interface CommitCommentOutput {
+export interface Comment {
     properties: { [key: string]: string };
     id: number;
     version: number;
@@ -344,7 +346,7 @@ export interface CommitCommentOutput {
     author: User;
     createdDate: number;
     updatedDate: number;
-    comments: CommitCommentOutput[];
+    comments: Comment[];
     attributes: { [key: string]: string };
     tasks: { [key: string]: string };
     permittedOperations: {
@@ -353,7 +355,7 @@ export interface CommitCommentOutput {
     }
 }
 
-export interface CommitCommentOptions {
+export interface CommentOptions {
     since?: string;
     path?: string;
     pageOptions?: PageOptions;
@@ -473,15 +475,22 @@ export interface PullRequestInput {
     title: string;
     description: string;
     state: 'ALL' | 'OPEN' | 'DECLINED' | 'MERGED';
-    open: boolean;
-    closed: boolean;
-    fromRef: PullRequestRef;
-    toRef: PullRequestRef;
-    locked: boolean;
-    reviewers: Participant[];
+    open?: boolean;
+    closed?: boolean;
+    fromRef: PullRequestRefInput;
+    toRef: PullRequestRefInput;
+    locked?: boolean;
+    reviewers?: Participant[];
 }
 
-export interface PullRequestOutput extends RestOutput {
+export interface PullRequestUpdateInput {
+    title?: string;
+    description?: string;
+    toRef?: PullRequestRefInput;
+    reviewers?: Participant[];
+}
+
+export interface PullRequest extends RestOutput {
     id: number;
     version: number;
     title: string;
@@ -509,7 +518,17 @@ export interface PullRequestVeto {
 
 export interface PullRequestRef {
     id: string;
-    repository: RepoOutput;
+    repository: Repository;
+}
+
+export interface PullRequestRefInput {
+    id: string;
+    repository: {
+        slug: string;
+        project: {
+            key: string;
+        }
+    };
 }
 
 export interface Participant {
@@ -518,34 +537,39 @@ export interface Participant {
     approved: boolean;
 }
 
-export interface PullRequestActivitiesOptions {
+export interface ParticipantInput {
+    user: {
+        name: string;
+    };
+    role: 'AUTHOR' | 'REVIEWER' | 'PARTICIPANT';
+}
+
+export interface PullRequestActivityOptions {
     fromId?: number;
     fromType: 'COMMENT' | 'ACTIVITY';
     pageOptions?: PageOptions;
 }
 
-export interface PullRequestActivitiesOutput {
+export interface PullRequestActivity {
     id: number;
     createdDate: number;
     user: User;
     action: string;
     commentAction?: string;
-    comment?: CommitCommentOutput;
-    commentAnchor?: CommitCommentAnchor;
+    comment?: Comment;
+    commentAnchor?: CommentAnchor;
     fromHash?: string;
     previousFromHash?: string;
     previousToHash?: string;
     toHash?: string;
-    added?: {
-        changesets?: CommitOutput[];
-        commits?: CommitOutput[];
-        total: number;
-    };
-    removed?: {
-        changesets?: CommitOutput[];
-        commits?: CommitOutput[];
-        total: number;
-    };
+    added?: PullRequestActivityChanges;
+    removed?: PullRequestActivityChanges;
+}
+
+export interface PullRequestActivityChanges {
+    changesets?: Commit[];
+    commits?: Commit[];
+    total: number;
 }
 
 
@@ -557,10 +581,10 @@ export interface PullRequestDiffOptions {
     pageOptions?: PageOptions;
 }
 
-export interface TaskOutput {
+export interface Task {
     id: number;
     properties: { [key: string]: string };
-    anchor: CommitCommentOutput;
+    anchor: Comment;
     author: User;
     createdDate: number;
     permittedOperations: {
@@ -573,7 +597,7 @@ export interface TaskOutput {
 }
 
 export interface TaskInput {
-    anchor?: CommitCommentOutput;
+    anchor?: Comment;
     text?: string;
     state?: 'OPEN' | 'RESOLVED';
 }
