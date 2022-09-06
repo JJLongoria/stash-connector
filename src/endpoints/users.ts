@@ -111,10 +111,13 @@ export class UsersEndpoint extends EndpointService {
     /**
      * Retrieve a page of users, optionally run through provided filters
      * @param {string} [filter] Return only users, whose username, name or email address contain the filter value
+     * @param {PageOptions} [pageOptions] Page options to paginate results (or obtain more results per page)
      * @returns {Promise<Page<User>>} Promise with the requested page data
      */
-    async list(filter?: string): Promise<Page<User>> {
-        const request = this.doGet();
+    async list(filter?: string, pageOptions?: PageOptions): Promise<Page<User>> {
+        const request = this.doGet({
+            pageOptions: pageOptions,
+        });
         try {
             if (filter) {
                 request.addQueryParam('filter', filter);
