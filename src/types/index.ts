@@ -453,12 +453,12 @@ export interface Group {
 
 export interface PermissionUsersOutput {
     user: User;
-    permission: 'LICENSED_USER' | 'PROJECT_CREATE' | 'ADMIN' | 'SYS_ADMIN';
+    permission: 'LICENSED_USER' | 'PROJECT_CREATE' | 'ADMIN' | 'SYS_ADMIN' | 'PROJECT_READ' | 'PROJECT_WRITE';
 }
 
 export interface PermissionGroups {
     group: Group;
-    permission: 'LICENSED_USER' | 'PROJECT_CREATE' | 'ADMIN' | 'SYS_ADMIN';
+    permission: 'LICENSED_USER' | 'PROJECT_CREATE' | 'ADMIN' | 'SYS_ADMIN' | 'PROJECT_READ' | 'PROJECT_WRITE';
 }
 
 export interface RepoPullRequestOptions {
