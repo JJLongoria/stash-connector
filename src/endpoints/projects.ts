@@ -1926,6 +1926,16 @@ export class ProjectReposEndpoint extends EndpointService {
     };
 
     /**
+     * Contains all operations related with project repository permissions
+     * All paths and operations from '/rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/permissions'. 
+     * @param {string} slug Repository slug
+     * @returns {ProjectRepoPermissionsEndpoint} Get all operations about the project repository permissions
+     */
+    permissions = (slug: string): ProjectRepoPermissionsEndpoint => {
+        return new ProjectRepoPermissionsEndpoint(this.auth, slug);
+    };
+
+    /**
      * Contains all operations related with project repository pull requests
      * All paths and operations from '/rest/api/1.0/projects/{projectKey}/repos/{repositorySlug}/pull-requests'. 
      * @param {string} slug Repository slug
