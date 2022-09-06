@@ -1,4 +1,4 @@
-import { Basic, ChangeUserPasswordInput, DeleteAvatarOutput, EndpointService, Page, PageOptions, User } from "../types";
+import { Basic, ChangePasswordInput, DeleteAvatarOutput, EndpointService, Page, PageOptions, User } from "../types";
 
 /**
  * Class to manage and expose all endpoits and operations below '/rest/api/1.0/users/{userSlug}/avatar.png'
@@ -163,10 +163,10 @@ export class UsersEndpoint extends EndpointService {
 
     /**
      * Update the currently authenticated user's password
-     * @param {ChangeUserPasswordInput} changePasswordInput Change password input to update it
+     * @param {ChangePasswordInput} changePasswordInput Change password input to update it
      * @returns {Promise<void>} If not throw errors, operation finish successfully
      */
-    async changePassword(changePasswordInput: ChangeUserPasswordInput): Promise<void> {
+    async changePassword(changePasswordInput: ChangePasswordInput): Promise<void> {
         const request = this.doPut({
             param: 'credentials'
         }).asJson().withBody(changePasswordInput);

@@ -304,6 +304,18 @@ export interface CommitChangesOptions {
     pageOptions?: PageOptions;
 }
 
+export interface UserInput {
+    name?: string;
+    emailAddress?: string;
+    displayName?: string;
+    type?: string;
+    directoryName?: string;
+    deletable?: boolean;
+    lastAuthenticationTimestamp?: number;
+    mutableDetails?: boolean;
+    mutableGroups?: boolean;
+}
+
 export interface User {
     name: string;
     emailAddress: string;
@@ -661,13 +673,13 @@ export interface RemoveGroupInput {
     itemName: string;
 }
 
-export interface ChangePasswordInput {
+export interface ChangeUserPasswordInput {
     password: string;
     passwordConfirm: string;
     name: string;
 }
 
-export interface ChangeUserPasswordInput {
+export interface ChangePasswordInput {
     password: string;
     passwordConfirm: string;
     oldPassword: string;

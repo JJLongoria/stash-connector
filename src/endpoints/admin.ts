@@ -1,4 +1,4 @@
-import { AddGroupInput, AddUsersInput, Basic, ChangePasswordInput, ClusterOutput, CreateUserInput, EndpointService, GroupMembersOptions, License, MailHostConfigurationInput, MailHostConfiguration, Page, PageOptions, Group, PermissionGroups, PermissionUserOutput, PermissionUsersOutput, User } from "../types";
+import { AddGroupInput, AddUsersInput, Basic, ChangeUserPasswordInput, ClusterOutput, CreateUserInput, EndpointService, GroupMembersOptions, License, MailHostConfigurationInput, MailHostConfiguration, Page, PageOptions, Group, PermissionGroups, PermissionUserOutput, PermissionUsersOutput, User } from "../types";
 
 /**
  * Class to manage and expose all endpoits and operations below '/rest/api/1.0/projects/admin/groups'
@@ -311,10 +311,10 @@ export class AdminUsersEndpoint extends EndpointService {
 
     /**
      * Update a user's password. 
-     * @param {ChangePasswordInput} changePasswordInput Change Password input data
+     * @param {ChangeUserPasswordInput} changePasswordInput Change Password input data
      * @returns {Promise<void>} If not throw errors, operation finish succesfully
      */
-    async changePassword(changePasswordInput: ChangePasswordInput): Promise<void> {
+    async changePassword(changePasswordInput: ChangeUserPasswordInput): Promise<void> {
         const request = this.doPut({
             param: 'credentials'
         }).asJson().withBody(changePasswordInput);

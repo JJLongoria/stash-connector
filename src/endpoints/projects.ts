@@ -1965,8 +1965,8 @@ export class ProjectReposEndpoint extends EndpointService {
         return new ProjectRepoTagsEndpoint(this.auth, slug);
     };
 
-    constructor(auth: Basic, projectKey: string) {
-        super(auth, '/' + projectKey + '/repos');
+    constructor(auth: Basic, projectKey?: string, userSlug?: string) {
+        super(auth, (projectKey ? ('/' + projectKey + '/repos') : ('/~' + userSlug)));
     }
 
     /**
@@ -2398,11 +2398,12 @@ export class ProjectsEndpoint extends EndpointService {
     /**
      * Contains all operations related with project repositories
      * All paths and operations from '/rest/api/1.0/projects/{projectKey}/repos'. 
-     * @param {string} projectKey Project key to work with repos
+     * @param {string} [projectKey] Project key to work with repos (/rest/api/1.0/projects/{projectKey}/repos)
+     * @param {string} [userSlug] User Slug to work with personal repositories. (/rest/api/1.0/projects/~userslug/repos)
      * @returns {ProjectReposEndpoint} Get all operations about the project avatar
      */
-    repos = (projectKey: string): ProjectReposEndpoint => {
-        return new ProjectReposEndpoint(this.auth, projectKey);
+    repos = (projectKey?: string, userSlug?: string): ProjectReposEndpoint => {
+        return new ProjectReposEndpoint(this.auth, projectKey, userSlug);
     };
 
     /**
