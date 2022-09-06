@@ -13,7 +13,7 @@ export class AdminGroupsEndpoint extends EndpointService {
      * Retrieve a page of groups
      * @param {string} [filter] If specified only group names containing the supplied string will be returned
      * @param {PageOptions} [pageOptions] Page options to paginate results (or obtain more results per page)
-     * @returns {Promise<Page<Group>>} Promise with the updated project data
+     * @returns {Promise<Page<Group>>} Promise with the requested page data
      */
     async list(filter?: string, pageOptions?: PageOptions): Promise<Page<Group>> {
         const request = this.doGet({
