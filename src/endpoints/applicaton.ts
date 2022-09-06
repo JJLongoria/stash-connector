@@ -14,9 +14,7 @@ export class ApplicationEndpoint extends EndpointService {
      * @returns {Promise<ApplicationProperties>} Promise with the application properties data
      */
     async get(): Promise<ApplicationProperties> {
-        const request = this.doGet({
-            param: 'cluster'
-        });
+        const request = this.doGet();
         try {
             const result = await request.execute();
             return result.data as ApplicationProperties;

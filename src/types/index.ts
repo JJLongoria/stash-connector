@@ -763,7 +763,7 @@ export interface ApplicationProperties {
     displayName: string;
 }
 
-export interface LoggerOutput {
+export interface Logger {
     logLevel: 'TRACE' | 'DEBUG' | 'INFO' | 'WARN ' | 'ERROR';
 }
 

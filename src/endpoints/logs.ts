@@ -1,4 +1,4 @@
-import { Basic, EndpointService, LoggerOutput } from "../types";
+import { Basic, EndpointService, Logger } from "../types";
 
 /**
  * Class to manage and expose all endpoits and operations below '/rest/api/1.0/logs'
@@ -42,16 +42,16 @@ export class LogsLoggerEndpoint extends EndpointService {
     /**
      * Retrieve the current log level for a given logger
      * @param {string} loggerName The name of the logger
-     * @returns {Promise<LoggerOutput>} Promise with the logger data
+     * @returns {Promise<Logger>} Promise with the logger data
      */
-    async get(loggerName: string): Promise<LoggerOutput> {
+    async get(loggerName: string): Promise<Logger> {
         const request = this.doGet({
             param: loggerName
         });
         try {
 
             const result = await request.execute();
-            return result.data as LoggerOutput;
+            return result.data as Logger;
         } catch (error) {
             throw error;
         }
@@ -88,14 +88,14 @@ export class LogsRootLoggerEndpoint extends EndpointService {
 
     /**
      * Retrieve the current log level for a given logger
-     * @returns {Promise<LoggerOutput>} Promise with the logger data
+     * @returns {Promise<Logger>} Promise with the logger data
      */
-    async get(): Promise<LoggerOutput> {
+    async get(): Promise<Logger> {
         const request = this.doGet();
         try {
 
             const result = await request.execute();
-            return result.data as LoggerOutput;
+            return result.data as Logger;
         } catch (error) {
             throw error;
         }
