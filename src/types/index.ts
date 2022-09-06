@@ -430,7 +430,7 @@ export interface CompareDiffOptions {
 export interface RepoDiffOptions {
     since?: string;
     srcPath?: string;
-    until?: string;
+    until: string;
     contextLines?: number;
     whitespace?: string;
     pageOptions?: PageOptions;
@@ -453,12 +453,12 @@ export interface Group {
 
 export interface PermissionUsersOutput {
     user: User;
-    permission: 'LICENSED_USER' | 'PROJECT_CREATE' | 'ADMIN' | 'SYS_ADMIN' | 'PROJECT_READ' | 'PROJECT_WRITE';
+    permission: 'LICENSED_USER' | 'PROJECT_CREATE' | 'ADMIN' | 'SYS_ADMIN' | 'PROJECT_READ' | 'PROJECT_WRITE' | 'REPO_READ' | 'REPO_WRITE' | 'REPO_ADMIN';
 }
 
 export interface PermissionGroups {
     group: Group;
-    permission: 'LICENSED_USER' | 'PROJECT_CREATE' | 'ADMIN' | 'SYS_ADMIN' | 'PROJECT_READ' | 'PROJECT_WRITE';
+    permission: 'LICENSED_USER' | 'PROJECT_CREATE' | 'ADMIN' | 'SYS_ADMIN' | 'PROJECT_READ' | 'PROJECT_WRITE' | 'REPO_READ' | 'REPO_WRITE' | 'REPO_ADMIN';
 }
 
 export interface RepoPullRequestOptions {
@@ -642,7 +642,7 @@ export interface TagOutput {
     hash: string;
 }
 
-export interface PermitedOutput {
+export interface PermittedOutput {
     permitted: boolean;
 }
 

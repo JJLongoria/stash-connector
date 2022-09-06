@@ -531,9 +531,9 @@ export class AdminPermissionsUsersEndpoint extends EndpointService {
      * Retrieve a page of users that have no granted global permissions.
      * @param {string} [filter] If specified only user names containing the supplied string will be returned
      * @param {PageOptions} [pageOptions] Page options to paginate results (or obtain more results per page)
-     * @returns {Promise<Page<PermissionUsersOutput>>} Promise with the requested page data.
+     * @returns {Promise<Page<PermissionUserOutput>>} Promise with the requested page data.
      */
-    async none(filter?: string, pageOptions?: PageOptions): Promise<Page<PermissionUsersOutput>> {
+    async none(filter?: string, pageOptions?: PageOptions): Promise<Page<PermissionUserOutput>> {
         const request = this.doGet({
             param: 'none',
             pageOptions: pageOptions,
@@ -543,7 +543,7 @@ export class AdminPermissionsUsersEndpoint extends EndpointService {
                 request.addQueryParam('filter', filter);
             }
             const result = await request.execute();
-            return result.data as Page<PermissionUsersOutput>;
+            return result.data as Page<PermissionUserOutput>;
         } catch (error) {
             throw error;
         }

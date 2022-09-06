@@ -1,4 +1,4 @@
-import { Basic, EndpointService, Page, PageOptions, ProjectInput, Project, CreateRepoInput, Repository, ForkRepoInput, UpdateRepoInput, ListBranchesOptions, Branch, RepoBrowseOptions, RepoChangesOptions, RepoChangesOutput, CommitOptions, Commit, CommitChangesOptions, CommentInput, Comment, CommentOptions, CommitDiffOptions, CommitDiffOutput, CompareChangesOptions, CompareCommitsOptions, CompareDiffOptions, RepoDiffOptions, RepoFileOptions, PermissionUserOutput, Group, PermissionUsersOutput, RepoPullRequestOptions, PullRequest, PullRequestInput, PullRequestActivityOptions, PullRequestActivity, Participant, PullRequestDiffOptions, Task, TaskCountOutput, HookOutput, HookInput, TagsOptions, TagOutput, PermissionGroups, PermitedOutput, Line, PullRequestUpdateInput, ParticipantInput } from "../types";
+import { Basic, EndpointService, Page, PageOptions, ProjectInput, Project, CreateRepoInput, Repository, ForkRepoInput, UpdateRepoInput, ListBranchesOptions, Branch, RepoBrowseOptions, RepoChangesOptions, RepoChangesOutput, CommitOptions, Commit, CommitChangesOptions, CommentInput, Comment, CommentOptions, CommitDiffOptions, CommitDiffOutput, CompareChangesOptions, CompareCommitsOptions, CompareDiffOptions, RepoDiffOptions, RepoFileOptions, PermissionUserOutput, Group, PermissionUsersOutput, RepoPullRequestOptions, PullRequest, PullRequestInput, PullRequestActivityOptions, PullRequestActivity, Participant, PullRequestDiffOptions, Task, TaskCountOutput, HookOutput, HookInput, TagsOptions, TagOutput, PermissionGroups, PermittedOutput, Line, PullRequestUpdateInput, ParticipantInput } from "../types";
 
 class ProjectInputImp {
 
@@ -2293,24 +2293,24 @@ export class ProjectPermissionsAllEndpoint extends EndpointService {
 
     /**
      * Check whether the specified permission is the default permission (granted to all users) for a project.
-     * @returns {Promise<PermitedOutput>} Promise with the permited result.
+     * @returns {Promise<PermittedOutput>} Promise with the permited result.
      */
-    async check(): Promise<PermitedOutput> {
+    async check(): Promise<PermittedOutput> {
         const request = this.doGet();
         try {
             const result = await request.execute();
-            return result.data as PermitedOutput;
+            return result.data as PermittedOutput;
         } catch (error) {
             throw error;
         }
     }
 
-    async update(allow: boolean): Promise<PermitedOutput> {
+    async update(allow: boolean): Promise<PermittedOutput> {
         const request = this.doPost();
         try {
             request.addQueryParam('allow', allow);
             const result = await request.execute();
-            return result.data as PermitedOutput;
+            return result.data as PermittedOutput;
         } catch (error) {
             throw error;
         }
