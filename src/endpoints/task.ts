@@ -12,13 +12,13 @@ export class TasksEndpoint extends EndpointService {
     /**
      * Create a new task
      * @param {TaskInput} taskInput Task intput to create it
-     * @returns {Promise<Page<Task>>} Promise with the created task data
+     * @returns {Promise<Task>} Promise with the created task data
      */
-    async create(taskInput: TaskInput): Promise<Page<Task>> {
+    async create(taskInput: TaskInput): Promise<Task> {
         const request = this.doPost().asJson().withBody(taskInput);
         try {
             const result = await request.execute();
-            return result.data as Page<Task>;
+            return result.data as Task;
         } catch (error) {
             throw error;
         }
@@ -64,10 +64,10 @@ export class TasksEndpoint extends EndpointService {
      * @param {number} taskId Task id to retrieve
      * @returns {Promise<void>} If not throw errors, operation finish succesfully
      */
-     async delete(taskId: number, taskInput: TaskInput): Promise<void> {
+     async delete(taskId: number): Promise<void> {
         const request = this.doDelete({
             param: taskId
-        }).asJson().withBody(taskInput);
+        });
         try {
             const result = await request.execute();
             return;
