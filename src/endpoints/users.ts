@@ -1,4 +1,4 @@
-import { Basic, ChangeUserPasswordInput, DeleteAvatarOutput, EndpointService, Page, User } from "../types";
+import { Basic, ChangeUserPasswordInput, DeleteAvatarOutput, EndpointService, Page, PageOptions, User } from "../types";
 
 /**
  * Class to manage and expose all endpoits and operations below '/rest/api/1.0/users/{userSlug}/avatar.png'
