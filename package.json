@@ -1,8 +1,8 @@
 {
   "name": "stash-connector",
-  "productName": "Atlassian Stash REST API Connetor",
-  "displayName": "Atlassian Stash REST API Connetor",
-  "version": "0.0.2",
+  "productName": "Stash REST API Connector",
+  "displayName": "Stash REST API Connector",
+  "version": "0.0.4",
   "description": "Module to handle and work with Atlassian Stash projects and repositories throug REST API. Admin your repositories and projects in Stash easy. This project is not an Atlassian official project but use the Atlassian Stash REST API",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -46,6 +46,7 @@
   "dependencies": {
     "axios": "^0.27.2",
     "fs-extra": "^9.1.0",
+    "jira-server-connector": "^0.0.2",
     "unzipper": "^0.10.11"
   }
 }

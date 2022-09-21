@@ -456,7 +456,7 @@ export class ProjectRepoPullRequestsMergeEndpoint extends EndpointService {
      * @returns {Promise<PullRequest>} Return the merged pull request data.
      */
     async execute(version?: number) {
-        const request = this.doPost();
+        const request = this.doPost().asJson();
         try {
             if (version !== undefined) {
                 request.addQueryParam('version', version);
